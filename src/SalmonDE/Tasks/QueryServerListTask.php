@@ -18,12 +18,16 @@ class QueryServerListTask extends AsyncTask
         $request = trim(Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']));
         if($request != 'Error: server key not found'){
             $information = json_decode($request, true);
-            $text[] = TF::DARK_GREEN.$this->lines['Header'];
-            foreach($information['voters'] as $voter){
-                $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
+            if(isset($information['voters'])){
+                $text[] = TF::DARK_GREEN.$this->lines['Header'];
+                foreach($information['voters'] as $voter){
+                    $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
+                }
+                $text = implode("\n", $text);
+                $this->setResult($text);
+            }else{
+                $this->setResult(false);
             }
-            $text = implode("\n", $text);
-            $this->setResult($text);
         }else{
             $this->setResult(false);
         }
