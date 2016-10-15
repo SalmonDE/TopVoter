@@ -1,16 +1,18 @@
+---
 #Position of the floating voter list text
- Pos:
+Pos:
   X: 8
   "Y": 6
   Z: -8
-#API-Key of your server on minecraftpocket-servers.com
-API-Key: -------------
+#API-Key of your server provided by minecraftpocket-servers.com
+API-Key: '-----------'
 #Amount of voters who shall be shown
 Amount: 5
 #Update interval of the particle in seconds
 #SHOULD BE ATLEAST 180! OUTPUT IS CACHED FOR 3 MINUTES!
 Update-Interval: 180
 #Header of the floating text particle
-Header: Voter <3 ( ͡° ͜ʖ ͡°)
-Text: {player} §9{votes}
+Header: "Voter <3 ( ͡° ͜ʖ ͡°)"
+Text: "{player} §9{votes}"
 Auto-Update: true
+...
