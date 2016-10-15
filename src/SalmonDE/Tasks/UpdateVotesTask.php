@@ -7,10 +7,10 @@ use SalmonDE\Tasks\QueryServerListTask;
 class UpdateVotesTask extends PluginTask
 {
 
-    public function __construct($owner){
+    public function __construct($owner, $lines){
         parent::__construct($owner);
-        $this->lines = ['Header' => $this->getOwner()->getConfig()->get('Header'), 'Text' => $this->getOwner()->getConfig()->get('Text')];
-        $this->data = [
+        $this->lines = $lines;
+        $this->data= [
             'Key' => $this->getOwner()->getConfig()->get('API-Key'),
             'Amount' => $this->getOwner()->getConfig()->get('Amount')
         ];
@@ -18,5 +18,8 @@ class UpdateVotesTask extends PluginTask
 
     public function onRun($currenttick){
         $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data, $this->lines));
+        foreach($this->getOwner()->getServer()->getOnlinePlayers() as $player){
+            $player->getLevel()->addParticle($this->getOwner()->particle, [$player]);
+        }
     }
 }
