@@ -1,0 +1,39 @@
+language: php
+
+php:
+ - 7.0.12
+
+branches:
+ - master
+
+before_script:
+ - cd /home/travis/build/
+ - phpenv config-rm xdebug.ini
+ - pecl install channel://pecl.php.net/pthreads-3.1.6
+ - pecl install channel://pecl.php.net/weakref-0.3.2
+ - echo | pecl install channel://pecl.php.net/yaml-2.0.0
+ - git clone --depth=50 --branch=php7 https://github.com/ClearSkyTeam/ClearSky.git
+ - mkdir -p ClearSky/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/src ClearSky/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/resources ClearSky/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/plugin.yml ClearSky/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/LICENSE ClearSky/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/build.php ClearSky/
+ - cd ClearSky/plugins/
+ - wget -O DevTools.phar https://github.com/PocketMine/DevTools/releases/download/v1.11.0/DevTools_v1.11.0.phar
+ - cd /home/travis/build/ClearSky
+
+script:
+ - php build.php
+
+deploy:
+  provider: releases
+  api_key: "$traviskey"
+  file: "/home/travis/build/ClearSky/plugins/DevTools/TopVoter.phar"
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: false
+
+notifications:
+ email: false

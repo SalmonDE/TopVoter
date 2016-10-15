@@ -9,15 +9,16 @@ use pocketmine\utils\Utils;
 class QueryServerListTask extends AsyncTask
 {
 
-    public function __construct(Array $data){
+    public function __construct(Array $data, String $header){
         $this->data = $data;
+        $this->header = $header;
     }
 
     public function onRun(){
         $request = trim(Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']));
         if($request != 'Error: server key not found'){
             $information = json_decode($request, true);
-            $text[] = TF::DARK_GREEN.'Voter <3 ( ͡° ͜ʖ ͡°)';
+            $text[] = TF::DARK_GREEN.$this->header;
             foreach($information['voters'] as $voter){
                 $text[$voter['nickname']] = TF::GOLD.$voter['nickname'].' '.TF::BLUE.$voter['votes'];
             }
@@ -36,7 +37,7 @@ class QueryServerListTask extends AsyncTask
                 $player->getLevel()->addParticle($plugin->particle, [$player]);
             }
         }else{
-            $plugin->getLogger()->error('Invalid API Key!');
+            $plugin->getLogger()->error('Invalid Response!');
         }
     }
 }
