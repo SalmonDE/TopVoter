@@ -1,0 +1,6 @@
+name: TopVoter
+version: 1.0.0
+api: 2.0.0
+main: SalmonDE\TopVoter
+author: SalmonDE
+website: https://salmonde.de/
