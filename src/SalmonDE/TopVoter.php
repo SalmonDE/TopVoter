@@ -18,10 +18,8 @@ class TopVoter extends PluginBase implements Listener
     public function onEnable(){
         $this->saveResource('config.yml');
         $pos = $this->getConfig()->get('Pos');
-        if(!isset($this->particle)){
-            $this->particle = new FloatingTextParticle(new Vector3($pos['X'], $pos['Y'], $pos['Z']), '', TF::DARK_GREEN.TF::BOLD.$this->getConfig()->get('Header'));
-        }
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this, ['Header' => $this->getConfig()->get('Header'), 'Text' => $this->getConfig()->get('Text')]), $this->getConfig()->get('Update-Interval') * 20);
+        $this->particle = new FloatingTextParticle(new Vector3($pos['X'], $pos['Y'], $pos['Z']), '', TF::DARK_GREEN.TF::BOLD.$this->getConfig()->get('Header')."\n".TF::GOLD.'------');
+        $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this, $this->getConfig()->get('Header')), $this->getConfig()->get('Update-Interval') * 20);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));
     }

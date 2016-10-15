@@ -9,18 +9,18 @@ use pocketmine\utils\Utils;
 class QueryServerListTask extends AsyncTask
 {
 
-    public function __construct(Array $data, Array $lines){
+    public function __construct(Array $data, String $header){
         $this->data = $data;
-        $this->lines = $lines;
+        $this->header = $header;
     }
 
     public function onRun(){
         $request = trim(Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']));
         if($request != 'Error: server key not found'){
             $information = json_decode($request, true);
-            $text[] = TF::DARK_GREEN.$this->lines['Header'];
+            $text[] = TF::DARK_GREEN.$this->header;
             foreach($information['voters'] as $voter){
-                $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
+                $text[$voter['nickname']] = TF::GOLD.$voter['nickname'].' '.TF::BLUE.$voter['votes'];
             }
             $text = implode("\n", $text);
             $this->setResult($text);
