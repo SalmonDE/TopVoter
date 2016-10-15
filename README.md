@@ -5,6 +5,6 @@ Show the voters of your PocketMine server on a floating text!
 
 ![Preview](https://salmonde.de/MCPE-Plugins/Pictures/TopVoter/Preview.jpg)
 
-**After waiting some time**
+**After another person has voted:**
 
 ![Preview2](https://salmonde.de/MCPE-Plugins/Pictures/TopVoter/Preview2.jpg)
