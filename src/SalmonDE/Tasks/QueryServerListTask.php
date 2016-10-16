@@ -15,9 +15,9 @@ class QueryServerListTask extends AsyncTask
     }
 
     public function onRun(){
-        $request = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']);
-        if($request != 'Error: server key not found' || $request != 'Error: no server key'){
-            $information = json_decode($request, true);
+        $information = trim(Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']));
+        if($information !== 'Error: server key not found' || $information !== 'Error: no server key'){
+            $information = json_decode($information, true);
             if(isset($information['voters'])){
                 $text[] = TF::DARK_GREEN.$this->lines['Header'];
                 foreach($information['voters'] as $voter){
@@ -27,9 +27,11 @@ class QueryServerListTask extends AsyncTask
                 $this->setResult($text);
             }else{
                 $this->setResult(false);
+                var_dump($information);
             }
         }else{
             $this->setResult(false);
+            echo($information);
         }
     }
 
