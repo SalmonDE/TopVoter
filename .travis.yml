@@ -1,7 +1,7 @@
 language: php
 
 php:
- - 7.0.11
+ - 7.0.12
 
 branches:
  - master
@@ -12,16 +12,16 @@ before_script:
  - pecl install channel://pecl.php.net/pthreads-3.1.6
  - pecl install channel://pecl.php.net/weakref-0.3.2
  - echo | pecl install channel://pecl.php.net/yaml-2.0.0
- - git clone --depth=50 --branch=php7 https://github.com/ClearSkyTeam/ClearSky.git
- - mkdir -p ClearSky/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/src ClearSky/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/resources ClearSky/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/plugin.yml ClearSky/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/LICENSE ClearSky/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/build.php ClearSky/
- - cd ClearSky/plugins/
+ - git clone --recursive --depth=50 --branch=master https://github.com/pmmp/PocketMine-MP.git
+ - mkdir -p PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/src PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/resources PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/plugin.yml PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/LICENSE PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonGER/TopVoter/build.php PocketMine-MP/
+ - cd PocketMine-MP/plugins/
  - wget -O DevTools.phar https://github.com/PocketMine/DevTools/releases/download/v1.11.0/DevTools_v1.11.0.phar
- - cd /home/travis/build/ClearSky
+ - cd /home/travis/build/PocketMine-MP
 
 script:
  - php build.php
@@ -29,7 +29,7 @@ script:
 deploy:
   provider: releases
   api_key: "$traviskey"
-  file: "/home/travis/build/ClearSky/plugins/DevTools/TopVoter.phar"
+  file: "/home/travis/build/PocketMine-MP/plugins/DevTools/TopVoter.phar"
   skip_cleanup: true
   overwrite: true
   on:
