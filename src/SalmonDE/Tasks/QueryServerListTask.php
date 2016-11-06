@@ -39,8 +39,11 @@ class QueryServerListTask extends AsyncTask
         $plugin = $server->getPluginManager()->getPlugin('TopVoter');
         if($this->getResult()){
             $plugin->particle->setTitle($this->getResult());
+            $plugin->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
-                $player->getLevel()->addParticle($plugin->particle, [$player]);
+                if(in_array($player->getLevel()->getName(), $plugin->worlds)){
+                    $player->getLevel()->addParticle($plugin->particle, [$player]);
+                }
             }
         }else{
             $plugin->getLogger()->error('Invalid Response!');

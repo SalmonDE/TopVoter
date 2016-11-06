@@ -4,6 +4,7 @@ Pos:
   X: 8
   "Y": 6
   Z: -8
+Worlds: [Lobby, Lobby1]
 #API-Key of your server provided by minecraftpocket-servers.com
 API-Key: '-----------'
 #Amount of voters who shall be shown
