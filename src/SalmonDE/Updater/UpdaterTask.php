@@ -24,8 +24,8 @@ class UpdaterTask extends PluginTask
                 foreach(glob("plugins/*".$this->name."*.phar") as $phar){
                     unlink($phar);
                 }
-                file_put_contents('plugins/'.$this->name.'.phar', $file);
-                if(!file_exists('plugins/'.$this->name.'.phar')){
+                file_put_contents('plugins/'.$this->name.' v'.$this->newversion.'.phar', $file);
+                if(!file_exists('plugins/'.$this->name.' v'.$this->newversion.'.phar')){
                         $this->getOwner()->getLogger()->error('Failed to download the update!');
                 }else{
                     $this->getOwner()->getServer()->broadcastMessage(TF::RED.TF::BOLD.'Server will restart due to a software update!');
