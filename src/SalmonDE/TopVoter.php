@@ -16,6 +16,8 @@ use SalmonDE\Updater\UpdaterTask;
 class TopVoter extends PluginBase implements Listener
 {
 
+    private static $instance = null;
+    private $voters = [];
     public $particle;
     public $worlds = [];
 
@@ -26,6 +28,7 @@ class TopVoter extends PluginBase implements Listener
             $this->particle = new FloatingTextParticle(new Vector3($pos['X'], $pos['Y'], $pos['Z']), '', TF::DARK_GREEN.TF::BOLD.$this->getConfig()->get('Header'));
         }
         $this->worlds = $this->getConfig()->get('Worlds');
+        self::$instance = $this;
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), $this->getConfig()->get('Update-Interval') * 20);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));
@@ -47,6 +50,18 @@ class TopVoter extends PluginBase implements Listener
                 $event->getTarget()->addParticle($this->particle, [$event->getEntity()]);
             }
         }
+    }
+
+    public function setVoters(array $voters){
+        $this->voters = $voters;
+    }
+
+    public function getVoters(){
+        return $this->voters;
+    }
+
+    public static function getInstance(){
+        return self::$instance;
     }
 
     public function update(){

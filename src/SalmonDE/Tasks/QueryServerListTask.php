@@ -5,6 +5,7 @@ use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\utils\Utils;
+use SalmonDE\TopVoter;
 
 class QueryServerListTask extends AsyncTask
 {
@@ -24,7 +25,7 @@ class QueryServerListTask extends AsyncTask
                     $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
                 }
                 $text = implode("\n", $text);
-                $this->setResult($text);
+                $this->setResult(['Text' => $text, 'Voters' => $information['voters']]);
             }else{
                 $this->setResult(false);
                 var_dump($information);
@@ -38,7 +39,8 @@ class QueryServerListTask extends AsyncTask
     public function onCompletion(Server $server){
         $plugin = $server->getPluginManager()->getPlugin('TopVoter');
         if($this->getResult()){
-            $plugin->particle->setTitle($this->getResult());
+            TopVoter::getInstance()->setVoters($this->getResult()['Voters']);
+            $plugin->particle->setTitle($this->getResult()['Text']);
             $plugin->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
                 if(in_array($player->getLevel()->getName(), $plugin->worlds)){
