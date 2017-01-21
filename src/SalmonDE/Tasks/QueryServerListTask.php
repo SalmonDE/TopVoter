@@ -37,7 +37,7 @@ class QueryServerListTask extends AsyncTask
     public function onCompletion(Server $server){
         if($this->getResult()){
             TopVoter::getInstance()->setVoters($this->getResult()['Voters']);
-            TopVoter::getInstnace()->particle->setTitle($this->getResult()['Text']);
+            TopVoter::getInstance()->particle->setTitle($this->getResult()['Text']);
             TopVoter::getInstance()->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
                 if(in_array($player->getLevel()->getName(), $plugin->worlds)){
