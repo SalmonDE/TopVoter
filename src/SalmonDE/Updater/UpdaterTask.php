@@ -31,7 +31,7 @@ class UpdaterTask extends PluginTask
                     $this->getOwner()->getServer()->broadcastMessage(TF::RED.TF::BOLD.'Server will restart due to a software update!');
                     $this->getOwner()->getServer()->broadcastTip(TF::RED.TF::BOLD.'Server will restart due to a software update!');
                     sleep(7);
-                    $this->getOwner()->getServer()->shutdown();
+                    $this->getOwner()->getServer()->reload();
                 }
             }else{
                 $this->getOwner()->getLogger()->error('md5 hash of the phar was incorrect!');
