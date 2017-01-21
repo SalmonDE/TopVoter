@@ -6,7 +6,7 @@ Pos:
   Z: -8
 Worlds: [Lobby, Lobby1]
 #API-Key of your server provided by minecraftpocket-servers.com
-API-Key: '-----------'
+API-Key: ''
 #Amount of voters who shall be shown
 Amount: 5
 #Update interval of the particle in seconds

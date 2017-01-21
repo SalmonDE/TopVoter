@@ -22,13 +22,13 @@ class TopVoter extends PluginBase implements Listener
     public $worlds = [];
 
     public function onEnable(){
+        self::$instance = $this;
         $this->saveResource('config.yml');
         if(!isset($this->particle)){
             $pos = $this->getConfig()->get('Pos');
             $this->particle = new FloatingTextParticle(new Vector3($pos['X'], $pos['Y'], $pos['Z']), '', TF::DARK_GREEN.TF::BOLD.$this->getConfig()->get('Header'));
         }
         $this->worlds = $this->getConfig()->get('Worlds');
-        self::$instance = $this;
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), $this->getConfig()->get('Update-Interval') * 20);
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));

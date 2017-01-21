@@ -28,27 +28,24 @@ class QueryServerListTask extends AsyncTask
                 $this->setResult(['Text' => $text, 'Voters' => $information['voters']]);
             }else{
                 $this->setResult(false);
-                var_dump($information);
             }
         }else{
             $this->setResult(false);
-            echo($information);
         }
     }
 
     public function onCompletion(Server $server){
-        $plugin = $server->getPluginManager()->getPlugin('TopVoter');
         if($this->getResult()){
             TopVoter::getInstance()->setVoters($this->getResult()['Voters']);
-            $plugin->particle->setTitle($this->getResult()['Text']);
-            $plugin->particle->setInvisible(false);
+            TopVoter::getInstnace()->particle->setTitle($this->getResult()['Text']);
+            TopVoter::getInstance()->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
                 if(in_array($player->getLevel()->getName(), $plugin->worlds)){
                     $player->getLevel()->addParticle($plugin->particle, [$player]);
                 }
             }
         }else{
-            $plugin->getLogger()->error('Invalid Response!');
+            TopVoter::getInstance()->getLogger()->error('Invalid Response! Is the API key correct?');
         }
     }
 }

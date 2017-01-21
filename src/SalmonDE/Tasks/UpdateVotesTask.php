@@ -17,6 +17,11 @@ class UpdateVotesTask extends PluginTask
     }
 
     public function onRun($currenttick){
-        $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data, $this->lines));
+        if($this->data['Key'] && $this->data['Amount'] > 0){
+            $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data, $this->lines));
+        }else{
+            $this->getOwner()->getLogger()->warning('Invalid API key or voter amount!');
+            $this->getOwner()->getServer()->getScheduler()->cancelTask($this->getTaskId());
+        }
     }
 }
