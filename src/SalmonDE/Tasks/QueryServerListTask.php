@@ -40,8 +40,8 @@ class QueryServerListTask extends AsyncTask
             TopVoter::getInstance()->particle->setTitle($this->getResult()['Text']);
             TopVoter::getInstance()->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
-                if(in_array($player->getLevel()->getName(), $plugin->worlds)){
-                    $player->getLevel()->addParticle($plugin->particle, [$player]);
+                if(in_array($player->getLevel()->getName(), TopVoter::getInstance()->worlds)){
+                    $player->getLevel()->addParticle(TopVoter::getInstance()->particle, [$player]);
                 }
             }
         }else{
