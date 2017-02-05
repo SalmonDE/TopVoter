@@ -14,11 +14,11 @@ before_script:
  - echo | pecl install channel://pecl.php.net/yaml-2.0.0
  - git clone --recursive --depth=50 --branch=master https://github.com/pmmp/PocketMine-MP.git
  - mkdir -p PocketMine-MP/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/src PocketMine-MP/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/resources PocketMine-MP/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/plugin.yml PocketMine-MP/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/LICENSE PocketMine-MP/plugins/TopVoter-src
- - cp -rf SalmonGER/TopVoter/build.php PocketMine-MP/
+ - cp -rf SalmonDE/TopVoter/src PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonDE/TopVoter/resources PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonDE/TopVoter/plugin.yml PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonDE/TopVoter/LICENSE PocketMine-MP/plugins/TopVoter-src
+ - cp -rf SalmonDE/TopVoter/build.php PocketMine-MP/
  - cd PocketMine-MP/plugins/
  - wget -O DevTools.phar https://github.com/PocketMine/DevTools/releases/download/v1.11.0/DevTools_v1.11.0.phar
  - cd /home/travis/build/PocketMine-MP
