@@ -20,7 +20,7 @@ before_script:
  - cp -rf SalmonDE/TopVoter/LICENSE PocketMine-MP/plugins/TopVoter-src
  - cp -rf SalmonDE/TopVoter/build.php PocketMine-MP/
  - cd PocketMine-MP/plugins/
- - wget -O DevTools.phar https://github.com/PocketMine/DevTools/releases/download/v1.11.0/DevTools_v1.11.0.phar
+ - wget -O DevTools.phar https://github.com/pmmp/PocketMine-DevTools/releases/download/v1.11.2/PocketMine-DevTools_v1.11.2.phar
  - cd /home/travis/build/PocketMine-MP
 
 script:
