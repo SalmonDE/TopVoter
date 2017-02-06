@@ -16,28 +16,30 @@ class QueryServerListTask extends AsyncTask
     }
 
     public function onRun(){
-        $information = trim(Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']));
-        if($information !== 'Error: server key not found' || $information !== 'Error: no server key'){
-            $information = json_decode($information, true);
-            if(isset($information['voters'])){
-                $text[] = TF::DARK_GREEN.$this->lines['Header'];
-                foreach($information['voters'] as $voter){
-                    $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
-                }
-                $text = implode("\n", $text);
-                $this->setResult(['Text' => $text, 'Voters' => $information['voters']]);
-            }else{
-                $this->setResult(false);
+        try{
+            $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']);
+            $info = json_decode($raw, true);
+            if(!is_array($info)){
+                throw new \Exception('Couldn\'t process data! No array was returned!');
             }
-        }else{
-            $this->setResult(false);
+            if(!isset($info['voters'])){
+                $info['voters'] = [];
+            }
+            $text[] = TF::DARK_GREEN.$this->lines['Header'];
+            foreach($info['voters'] as $voter){
+                $text[$voter['nickname']] = TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->lines['Text']);
+            }
+            $text = implode("\n", $text);
+            $this->setResult(['success' => true, 'text' => $text, 'voters' => $info['voters']]);
+        }catch(\Exception $e){
+            $this->setResult(['success' => false, 'error' => $e, 'response' => $raw]);
         }
     }
 
     public function onCompletion(Server $server){
-        if($this->getResult()){
-            TopVoter::getInstance()->setVoters($this->getResult()['Voters']);
-            TopVoter::getInstance()->particle->setTitle($this->getResult()['Text']);
+        if($this->getResult()['success'] === true){
+            TopVoter::getInstance()->setVoters($this->getResult()['voters']);
+            TopVoter::getInstance()->particle->setTitle($this->getResult()['text']);
             TopVoter::getInstance()->particle->setInvisible(false);
             foreach($server->getOnlinePlayers() as $player){
                 if(in_array($player->getLevel()->getName(), TopVoter::getInstance()->worlds)){
@@ -45,7 +47,9 @@ class QueryServerListTask extends AsyncTask
                 }
             }
         }else{
-            TopVoter::getInstance()->getLogger()->error('Invalid Response! Is the API key correct?');
+            TopVoter::getInstance()->getLogger()->warning('Error while processing data from the serverlist!');
+            TopVoter::getInstance()->getLogger()->error($this->getResult()['error']->getMessage());
+            TopVoter::getInstance()->getLogger()->error('Raw: '.$this->getResult()['response']);
         }
     }
 }

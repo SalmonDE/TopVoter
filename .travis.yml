@@ -12,7 +12,7 @@ before_script:
  - pecl install channel://pecl.php.net/pthreads-3.1.6
  - pecl install channel://pecl.php.net/weakref-0.3.2
  - echo | pecl install channel://pecl.php.net/yaml-2.0.0
- - git clone --recursive --depth=50 --branch=master https://github.com/pmmp/PocketMine-MP.git
+ - git clone --recursive --branch=master https://github.com/pmmp/PocketMine-MP.git
  - mkdir -p PocketMine-MP/plugins/TopVoter-src
  - cp -rf SalmonDE/TopVoter/src PocketMine-MP/plugins/TopVoter-src
  - cp -rf SalmonDE/TopVoter/resources PocketMine-MP/plugins/TopVoter-src
