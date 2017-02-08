@@ -6,9 +6,9 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
-use SalmonDE\Tasks\UpdateVotesTask;
-use SalmonDE\Updater\CheckVersionTask;
-use SalmonDE\Updater\UpdaterTask;
+use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
+use SalmonDE\TopVoter\Updater\CheckVersionTask;
+use SalmonDE\TopVoter\Updater\UpdaterTask;
 
 class TopVoter extends PluginBase
 {
@@ -25,7 +25,7 @@ class TopVoter extends PluginBase
         $this->worlds = $this->getConfig()->get('Worlds');
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) > 180 ? $iv : 180) * 20);
         $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));
-        $this->getServer()->getPluginManager()->registerEvents($this, new EventListener());
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
     }
 
     private function initParticle(){
