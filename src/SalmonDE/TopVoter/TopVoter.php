@@ -22,7 +22,7 @@ class TopVoter extends PluginBase
         self::$instance = $this;
         $this->saveResource('config.yml');
         $this->initParticle();
-        $this->worlds = $this->getConfig()->get('Worlds');
+        $this->worlds = (array) $this->getConfig()->get('Worlds');
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) > 180 ? $iv : 180) * 20);
         $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
@@ -41,7 +41,7 @@ class TopVoter extends PluginBase
             $players = $this->getServer()->getOnlinePlayers();
         }
         foreach($players as $player){
-            if(!in_array($player->getLevel()->getName(), $this->worlds)){
+            if(in_array($player->getLevel()->getName(), $this->worlds)){
                 $player->getLevel()->addParticle($this->particle, [$player]);
             }
         }

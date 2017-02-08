@@ -16,7 +16,7 @@ class QueryServerListTask extends AsyncTask
 
     public function onRun(){
         try{
-            $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&key='.$this->data['Key'].'&month=current&format=json&limit='.$this->data['Amount']);
+            $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key']);
             $info = json_decode($raw, true);
             if(!is_array($info)){
                 throw new \Exception('Couldn\'t process data! No array was returned!');
