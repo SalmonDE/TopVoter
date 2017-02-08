@@ -5,7 +5,7 @@ use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\utils\Utils;
-use SalmonDE\TopVoter;
+use SalmonDE\TopVoter\TopVoter;
 
 class QueryServerListTask extends AsyncTask
 {
@@ -24,7 +24,7 @@ class QueryServerListTask extends AsyncTask
             if(!isset($info['voters'])){
                 $info['voters'] = [];
             }
-            $this->setResult(['success' => true, 'text' => $text, 'voters' => $info['voters']]);
+            $this->setResult(['success' => true, 'voters' => $info['voters']]);
         }catch(\Exception $e){
             $this->setResult(['success' => false, 'error' => $e, 'response' => $raw]);
         }
