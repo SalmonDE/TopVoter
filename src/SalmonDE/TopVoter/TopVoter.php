@@ -60,7 +60,7 @@ class TopVoter extends PluginBase
     public function updateParticle() : string{
         $text[] = TF::DARK_GREEN.$this->getConfig()->get('Header');
         foreach($this->voters as $voter){
-            $text .= "\n".TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text']).TF::RESET;
+            $text .= "\n".TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text')).TF::RESET;
         }
         $this->particle->setTitle($text);
         return $text;
