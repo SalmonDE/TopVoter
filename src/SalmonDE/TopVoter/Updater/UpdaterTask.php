@@ -1,5 +1,5 @@
 <?php
-namespace SalmonDE\Updater;
+namespace SalmonDE\TopVoter\Updater;
 
 use pocketmine\scheduler\PluginTask;
 use pocketmine\utils\TextFormat as TF;

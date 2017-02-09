@@ -1,5 +1,5 @@
 <?php
-namespace SalmonDE\Updater;
+namespace SalmonDE\TopVoter\Updater;
 
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
