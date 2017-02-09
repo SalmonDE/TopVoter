@@ -7,8 +7,6 @@ use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
-use SalmonDE\TopVoter\Updater\CheckVersionTask;
-use SalmonDE\TopVoter\Updater\UpdaterTask;
 
 class TopVoter extends PluginBase
 {
@@ -24,8 +22,12 @@ class TopVoter extends PluginBase
         $this->initParticle();
         $this->worlds = (array) $this->getConfig()->get('Worlds');
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) > 180 ? $iv : 180) * 20);
-        $this->getServer()->getScheduler()->scheduleAsyncTask(new CheckVersionTask($this));
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
+        $this->runUpdateManager();
+    }
+
+    public function runUpdateManager(){
+        \SalmonDE\Updater\UpdateManager::getNew($this->getFile(), $this, $this->getConfig()->get('Auto-Update'))->start();
     }
 
     private function initParticle(){
@@ -77,8 +79,4 @@ class TopVoter extends PluginBase
     public static function getInstance() : TopVoter{
         return self::$instance;
     }
-
-    public function update(){ // This is not part of the API!
-		    $this->getServer()->getScheduler()->scheduleTask(new UpdaterTask($this, $this->getDescription()->getVersion()));
-	  }
 }
