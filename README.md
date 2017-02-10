@@ -11,7 +11,7 @@ Shows a list of voters for your PocketMine-MP Server on a floating text!
 
 ## TopVoter API
 
-As of commit [e547488](https://github.com/SalmonDE/TopVoter/commit/e54748840ca6dd9df7f35f6f9d93ab096effcceb) TopVoter plugin has an API that allows other plugins to access it's data of voters.
+As of commit [e547488](https://github.com/SalmonDE/TopVoter/commit/e54748840ca6dd9df7f35f6f9d93ab096effcceb) TopVoter plugin offers an API that allows other plugins to access it's data and edit it.
 
 *Getting the list of voters:*
 ```
