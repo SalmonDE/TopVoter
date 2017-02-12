@@ -1,19 +1,22 @@
 ---
-#Position of the floating voter list text
+#Position of the floating text particle
 Pos:
   X: 0
   "Y": 0
   Z: 0
+#Worlds which will show the particle
 Worlds: [Lobby, Lobby1]
 #API-Key of your server provided by minecraftpocket-servers.com
 API-Key: ''
-#Amount of voters who shall be shown
+#Amount of voters who shall be shown (Max: 500)
 Amount: 5
 #Update interval of the query to the server in seconds
 #SHOULD BE ATLEAST 180! OUTPUT IS CACHED FOR 3 MINUTES!
 Update-Interval: 180
 #Header of the floating text particle
 Header: "Top Voters of the month <3"
+#Text for every row after the header
 Text: "{player} §9{votes}"
+#Enable automatically updating to new versions
 Auto-Update: true
 ...
