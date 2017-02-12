@@ -17,12 +17,14 @@ class EventListener implements Listener
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event){
-        $inst = TopVoter::getInstance();
-        if($event->getEntity() instanceof Player){
-            if(!in_array($event->getTarget()->getName(), $inst->worlds)){
-                $inst->removeParticle([$event->getEntity()]);
-            }elseif(!in_array($event->getOrigin()->getName(), $inst->worlds)){
-                $inst->sendParticle([$event->getEntity()]);
+        if(!$event->isCancelled()){
+            $inst = TopVoter::getInstance();
+            if($event->getEntity() instanceof Player){
+                if(!in_array($event->getTarget()->getName(), $inst->worlds)){
+                    $inst->removeParticle([$event->getEntity()]);
+                }elseif(!in_array($event->getOrigin()->getName(), $inst->worlds)){
+                    $inst->sendParticle([$event->getEntity()]);
+                }
             }
         }
     }

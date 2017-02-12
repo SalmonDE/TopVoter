@@ -32,6 +32,9 @@ class QueryServerListTask extends AsyncTask
 
     public function onCompletion(Server $server){
         $inst = TopVoter::getInstance();
+        if(!$inst->isEnabled()){
+            return;
+        }
         if($this->getResult()['success'] === true){
             $inst->setVoters($this->getResult()['voters']);
             $inst->updateParticle();

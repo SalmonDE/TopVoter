@@ -7,7 +7,7 @@ use SalmonDE\TopVoter\Tasks\QueryServerListTask;
 class UpdateVotesTask extends PluginTask
 {
 
-    public function __construct($owner){
+    public function __construct(\SalmonDE\TopVoter\TopVoter $owner){
         parent::__construct($owner);
     }
 
