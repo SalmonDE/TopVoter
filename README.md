@@ -6,7 +6,7 @@ Shows a list of voters for your PocketMine-MP Server on a floating text!
 - An internet connection to connect to the minecraftpocket-servers.com services.
 
 *This plugin has got an built-in updater which always checks for a new version.*
-*However, you can disable the auto update function.*
+*However, you can disable the auto update feature.*
 ## Preview:
 
 ![Preview](https://salmonde.de/MCPE-Plugins/Pictures/TopVoter/Preview.jpg)
