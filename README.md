@@ -1,4 +1,4 @@
-# TopVoter [![Build Status](https://travis-ci.org/SalmonDE/TopVoter.svg?branch=master)](https://travis-ci.org/SalmonDE/TopVoter)
+# TopVoter [![Build Status](https://travis-ci.org/SalmonDE/TopVoter.svg?branch=master)](https://travis-ci.org/SalmonDE/TopVoter) [![Poggit-CI](https://poggit.pmmp.io/ci.badge/SalmonDE/TopVoter/TopVoter)](https://poggit.pmmp.io/ci/SalmonDE/TopVoter/TopVoter)
 Shows a list of voters for your PocketMine-MP Server on a floating text!
 
 ## Preview:
