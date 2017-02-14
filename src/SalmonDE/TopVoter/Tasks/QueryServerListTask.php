@@ -26,7 +26,7 @@ class QueryServerListTask extends AsyncTask
             }
             $this->setResult(['success' => true, 'voters' => $info['voters']]);
         }catch(\Exception $e){
-            $this->setResult(['success' => false, 'error' => $e, 'response' => $raw]);
+            $this->setResult(['success' => false, 'error' => $e, 'response' => isset($raw) ? $raw : 'null']);
         }
     }
 
