@@ -36,10 +36,9 @@ class QueryServerListTask extends AsyncTask
             return;
         }
         if($this->getResult()['success'] === true){
-            $temp = $inst->getVoters();
-            $inst->setVoters($this->getResult()['voters']);
-            $inst->updateParticle();
-            if($temp !== $this->getResult()['voters']){
+            if($inst->getVoters() !== $this->getResult()['voters']){
+                $inst->setVoters($this->getResult()['voters']);
+                $inst->updateParticle();
                 $inst->sendParticle();
             }
         }else{
