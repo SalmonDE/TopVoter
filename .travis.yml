@@ -20,6 +20,7 @@ before_script:
  - cp -rf SalmonDE/TopVoter/LICENSE PocketMine-MP/plugins/TopVoter-src
  - cp -rf SalmonDE/TopVoter/build.php PocketMine-MP/
  - git clone https://github.com/pmmp/PocketMine-DevTools.git
+ - cp SalmonDE/TopVoter/compiledevtools.php /home/travis/build/
  - php compiledevtools.php
 
 script:
