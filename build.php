@@ -19,6 +19,10 @@ if(count(glob('plugins/DevTools/TopVoter*.phar')) === 0){
 }else{
     $fn = glob('plugins/DevTools/TopVoter*');
     rename($fn[0], 'plugins/DevTools/TopVoter.phar');
+    $phar = new Phar(__DIR__.'plugins/DevTools/TopVoter.phar');
+    $phar->startBuffering();
+    $phar->compress(Phar::GZ);
+    $phar->stopBuffering();
     echo "TopVoter.phar created!\n";
     exit(0);
 }
