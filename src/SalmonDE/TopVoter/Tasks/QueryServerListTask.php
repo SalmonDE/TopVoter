@@ -2,9 +2,6 @@
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\AsyncTask;
-use pocketmine\Server;
-use pocketmine\utils\TextFormat as TF;
-use pocketmine\utils\Utils;
 use SalmonDE\TopVoter\TopVoter;
 
 class QueryServerListTask extends AsyncTask
@@ -16,7 +13,7 @@ class QueryServerListTask extends AsyncTask
 
     public function onRun(){
         try{
-            $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key']);
+            $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key']);
             $info = json_decode($raw, true);
             if(!is_array($info)){
                 throw new \Exception('Couldn\'t process data! No array was returned!');
@@ -30,7 +27,7 @@ class QueryServerListTask extends AsyncTask
         }
     }
 
-    public function onCompletion(Server $server){
+    public function onCompletion(\pocketmine\Server $server){
         $inst = TopVoter::getInstance();
         if(!$inst->isEnabled()){
             return;

@@ -2,7 +2,6 @@
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\PluginTask;
-use SalmonDE\TopVoter\Tasks\QueryServerListTask;
 
 class UpdateVotesTask extends PluginTask
 {
