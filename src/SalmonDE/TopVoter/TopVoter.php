@@ -37,13 +37,13 @@ class TopVoter extends PluginBase
         }
     }
 
-    public function sendParticle(array $players = null){
+    public function sendParticle(array $players = null, bool $force = false){
         $this->particle->setInvisible(false);
         if($players === null){
             $players = $this->getServer()->getOnlinePlayers();
         }
         foreach($players as $player){
-            if(in_array($player->getLevel()->getName(), $this->worlds)){
+            if(in_array($player->getLevel()->getName(), $this->worlds) || $force){
                 $player->getLevel()->addParticle($this->particle, [$player]);
             }
         }

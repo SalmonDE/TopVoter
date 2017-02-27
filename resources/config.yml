@@ -14,7 +14,7 @@ Amount: 5
 #SHOULD BE ATLEAST 180! OUTPUT IS CACHED FOR 3 MINUTES!
 Update-Interval: 180
 #Header of the floating text particle
-Header: "Top Voters of the month <3"
+Header: "Top voters of the month <3"
 #Text for every row after the header
 Text: "{player} §9{votes}"
 #Enable automatically updating to new versions

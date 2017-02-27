@@ -22,8 +22,8 @@ class EventListener implements Listener
             if($event->getEntity() instanceof Player){
                 if(!in_array($event->getTarget()->getName(), $inst->worlds)){
                     $inst->removeParticle([$event->getEntity()]);
-                }elseif(!in_array($event->getOrigin()->getName(), $inst->worlds)){
-                    $inst->sendParticle([$event->getEntity()]);
+                }else{
+                    $inst->sendParticle([$event->getEntity()], true);
                 }
             }
         }

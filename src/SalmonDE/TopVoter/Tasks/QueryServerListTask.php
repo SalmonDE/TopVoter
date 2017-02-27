@@ -36,8 +36,12 @@ class QueryServerListTask extends AsyncTask
             return;
         }
         if($this->getResult()['success'] === true){
+            $temp = $inst->getVoters();
             $inst->setVoters($this->getResult()['voters']);
             $inst->updateParticle();
+            if($temp !== $this->getResult()['voters']){
+                $inst->sendParticle();
+            }
         }else{
             $inst->getLogger()->warning('Error while processing data from the serverlist!');
             $inst->getLogger()->error($this->getResult()['error']->getMessage());
