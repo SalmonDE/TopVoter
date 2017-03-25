@@ -7,7 +7,7 @@ Pos:
 #Worlds which will show the particle
 Worlds: [Lobby, Lobby1]
 #API-Key of your server provided by minecraftpocket-servers.com
-API-Key: ''
+API-Key: ""
 #Amount of voters who shall be shown (Max: 500)
 Amount: 5
 #Update interval of the query to the server in seconds
