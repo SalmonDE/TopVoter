@@ -23,7 +23,8 @@ class TopVoter extends PluginBase
         $this->worlds = (array) $this->getConfig()->get('Worlds');
         $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) > 180 ? $iv : 180) * 20);
         $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
-        $this->runUpdateManager();
+        
+        $updateManager = new \SalmonDE\Updater\UpdateManager($this);
     }
 
     public function runUpdateManager(){
