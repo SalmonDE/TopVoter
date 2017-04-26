@@ -13,7 +13,12 @@ class QueryServerListTask extends AsyncTask
 
     public function onRun(){
         try{
-            $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key']);
+            $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [], $err);
+
+            if($err !== ''){
+                throw new \Exception($err);
+            }
+
             $info = json_decode($raw, true);
             if(!is_array($info)){
                 throw new \Exception('Couldn\'t process data! No array was returned!');
@@ -23,7 +28,7 @@ class QueryServerListTask extends AsyncTask
             }
             $this->setResult(['success' => true, 'voters' => $info['voters']]);
         }catch(\Exception $e){
-            $this->setResult(['success' => false, 'error' => $e, 'response' => isset($raw) ? $raw : 'null']);
+            $this->setResult(['success' => false, 'error' => $e, 'response' => empty($raw) === false ? $raw : 'null']);
         }
     }
 
@@ -32,6 +37,7 @@ class QueryServerListTask extends AsyncTask
         if(!$inst->isEnabled()){
             return;
         }
+
         if($this->getResult()['success'] === true){
             if($inst->getVoters() !== $this->getResult()['voters']){
                 $inst->setVoters($this->getResult()['voters']);
