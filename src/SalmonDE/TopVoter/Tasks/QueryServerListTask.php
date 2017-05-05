@@ -13,9 +13,11 @@ class QueryServerListTask extends AsyncTask
 
     public function onRun(){
         try{
+            $err = '';
             $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [], $err);
 
             if($err !== ''){
+
                 throw new \Exception($err);
             }
 
