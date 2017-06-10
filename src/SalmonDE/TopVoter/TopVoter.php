@@ -21,7 +21,7 @@ class TopVoter extends PluginBase
         $this->saveResource('config.yml');
         $this->initParticle();
         $this->worlds = (array) $this->getConfig()->get('Worlds');
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
+        $this->getServer()->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
 
         $this->eventListener = $this->eventListener ?? new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
