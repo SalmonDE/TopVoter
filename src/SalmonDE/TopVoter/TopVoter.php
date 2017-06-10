@@ -11,24 +11,20 @@ use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 class TopVoter extends PluginBase
 {
 
-    private static $instance = null;
+    private $eventListener = null;
+
     private $voters = [];
     private $particle = null;
     public $worlds = [];
 
     public function onEnable(){
-        self::$instance = $this;
         $this->saveResource('config.yml');
         $this->initParticle();
         $this->worlds = (array) $this->getConfig()->get('Worlds');
-        $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) > 180 ? $iv : 180) * 20);
-        $this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
-        
-        $updateManager = new \SalmonDE\Updater\UpdateManager($this);
-    }
+        $this->getServer()->getScheduler()->scheduleRepeatingTask(new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
 
-    public function runUpdateManager(){
-        \SalmonDE\Updater\UpdateManager::getNew($this->getFile(), $this, $this->getConfig()->get('Auto-Update'))->start();
+        $this->eventListener = $this->eventListener ?? new EventListener($this);
+        $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
     }
 
     private function initParticle(){
@@ -40,11 +36,13 @@ class TopVoter extends PluginBase
 
     public function sendParticle(array $players = null, bool $force = false){
         $this->particle->setInvisible(false);
+
         if($players === null){
             $players = $this->getServer()->getOnlinePlayers();
         }
+
         foreach($players as $player){
-            if(in_array($player->getLevel()->getName(), $this->worlds) || $force){
+            if($force || in_array($player->getLevel()->getName(), $this->worlds)){
                 $player->getLevel()->addParticle($this->particle, [$player]);
             }
         }
@@ -52,20 +50,24 @@ class TopVoter extends PluginBase
 
     public function removeParticle(array $players = null){
         $this->particle->setInvisible();
+
         if($players === null){
             $players = $this->getServer()->getOnlinePlayers();
         }
+
         foreach($players as $player){
             $player->getLevel()->addParticle($this->particle, [$player]);
         }
     }
 
     public function updateParticle() : string{
-        $text = TF::DARK_GREEN.$this->getConfig()->get('Header');
+        $text = '';
+
         foreach($this->voters as $voter){
             $text .= "\n".TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text')).TF::RESET;
         }
-        $this->particle->setTitle($text);
+
+        $this->particle->setText($text);
         return $text;
     }
 
@@ -75,9 +77,5 @@ class TopVoter extends PluginBase
 
     public function getVoters() : array{
         return $this->voters;
-    }
-
-    public static function getInstance() : TopVoter{
-        return self::$instance;
     }
 }

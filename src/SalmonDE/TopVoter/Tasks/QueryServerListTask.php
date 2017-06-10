@@ -12,31 +12,32 @@ class QueryServerListTask extends AsyncTask
     }
 
     public function onRun(){
-        try{
-            $err = '';
-            $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [], $err);
+        $success = true;
+        $err = '';
 
-            if($err !== ''){
+        $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [], $err);
 
-                throw new \Exception($err);
-            }
+        if($err !== ''){
+            $this->setResult(['success' => false, 'error' => $err, 'response' => empty($raw) === false ? $raw : 'null']);
+            $success = false;
+        }
 
-            $info = json_decode($raw, true);
-            if(!is_array($info)){
-                throw new \Exception('Couldn\'t process data! No array was returned!');
-            }
-            if(!isset($info['voters'])){
-                $info['voters'] = [];
-            }
-            $this->setResult(['success' => true, 'voters' => $info['voters']]);
-        }catch(\Exception $e){
+        $data = json_decode($raw, true);
+
+        if(!is_array($data) || empty($data)){
             $this->setResult(['success' => false, 'error' => $e, 'response' => empty($raw) === false ? $raw : 'null']);
+            $success = false;
+        }
+
+        if($success){
+            $this->setResult(['success' => true, 'voters' => $data['voters']]);
         }
     }
 
     public function onCompletion(\pocketmine\Server $server){
-        $inst = TopVoter::getInstance();
-        if(!$inst->isEnabled()){
+        $inst = $server->getPluginManager()->getPlugin('TopVoter');
+
+        if($inst->isDisabled()){
             return;
         }
 
@@ -48,8 +49,8 @@ class QueryServerListTask extends AsyncTask
             }
         }else{
             $inst->getLogger()->warning('Error while processing data from the serverlist!');
-            $inst->getLogger()->error($this->getResult()['error']->getMessage());
-            $inst->getLogger()->error('Raw: '.$this->getResult()['response']);
+            $inst->getLogger()->error('Error: '.$this->getResult()['error']);
+            $inst->getLogger()->debug('Raw: '.$this->getResult()['response']);
         }
     }
 }

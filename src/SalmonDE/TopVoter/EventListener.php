@@ -9,21 +9,25 @@ use pocketmine\event\player\PlayerJoinEvent;
 class EventListener implements Listener
 {
 
+    private $plugin;
+
+    public function __construct(TopVoter $plugin){
+        $this->plugin = $plugin;
+    }
+
     public function onJoin(PlayerJoinEvent $event){
-        $inst = TopVoter::getInstance();
-        if(in_array($event->getPlayer()->getLevel()->getName(), $inst->worlds)){
-            $inst->sendParticle([$event->getPlayer()]);
+        if(in_array($event->getPlayer()->getLevel()->getName(), $this->plugin->worlds)){
+            $this->plugin->sendParticle([$event->getPlayer()]);
         }
     }
 
     public function onLevelChange(EntityLevelChangeEvent $event){
         if(!$event->isCancelled()){
-            $inst = TopVoter::getInstance();
             if($event->getEntity() instanceof Player){
-                if(!in_array($event->getTarget()->getName(), $inst->worlds)){
-                    $inst->removeParticle([$event->getEntity()]);
+                if(!in_array($event->getTarget()->getName(), $this->plugin->worlds)){
+                    $this->plugin->removeParticle([$event->getEntity()]);
                 }else{
-                    $inst->sendParticle([$event->getEntity()], true);
+                    $this->plugin->sendParticle([$event->getEntity()], true);
                 }
             }
         }
