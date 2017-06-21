@@ -4,7 +4,6 @@ TopVoter is a plugin that lists voters on your PocketMine-MP Server using Floati
 ### **Requirements:**
 - An API key of your server from minecraftpocket-servers.com
 - An internet connection to connect to the minecraftpocket-servers.com services.
-- FishyUpdater files for TopVoter (Pre-built phars can be found [here](https://github.com/SalmonDE/TopVoter/releases))
 
 *This plugin has got an built-in updater which always checks for a new version.*
 *However, you can disable the auto update feature.*
