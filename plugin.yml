@@ -1,5 +1,5 @@
 name: TopVoter
-version: 2.2.1
-api: [3.0.0-ALPHA5, 3.0.0-ALPHA6]
+version: 2.3.0
+api: [3.0.0-ALPHA7]
 main: SalmonDE\TopVoter\TopVoter
 author: SalmonDE

@@ -1,10 +1,10 @@
 <?php
+
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\PluginTask;
 
-class UpdateVotesTask extends PluginTask
-{
+class UpdateVotesTask extends PluginTask {
 
     public function __construct(\SalmonDE\TopVoter\TopVoter $owner){
         parent::__construct($owner);
@@ -15,7 +15,7 @@ class UpdateVotesTask extends PluginTask
         ];
     }
 
-    public function onRun($currenttick){
+    public function onRun(int $currenttick){
         if($this->data['Key'] !== null){
             $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data));
         }else{
@@ -23,4 +23,5 @@ class UpdateVotesTask extends PluginTask
             $this->getOwner()->getServer()->getScheduler()->cancelTask($this->getTaskId());
         }
     }
+
 }

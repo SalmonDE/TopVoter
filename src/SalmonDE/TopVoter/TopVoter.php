@@ -1,21 +1,20 @@
 <?php
+
 namespace SalmonDE\TopVoter;
 
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
-use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
-class TopVoter extends PluginBase
-{
+class TopVoter extends PluginBase {
 
     private $eventListener = null;
-
+    private $updateTask;
     private $voters = [];
     private $particle = null;
-    public $worlds = [];
+    private $worlds = [];
 
     public function onEnable(){
         $this->saveResource('config.yml');
@@ -42,7 +41,7 @@ class TopVoter extends PluginBase
         }
 
         foreach($players as $player){
-            if($force || in_array($player->getLevel()->getName(), $this->worlds)){
+            if($force || in_array($player->getLevel()->getFolderName(), $this->getWorlds())){
                 $player->getLevel()->addParticle($this->particle, [$player]);
             }
         }
@@ -60,14 +59,18 @@ class TopVoter extends PluginBase
         }
     }
 
-    public function updateParticle() : string{
+    public function updateParticle(bool $apply = true): string{
         $text = '';
 
         foreach($this->voters as $voter){
-            $text .= "\n".TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text')).TF::RESET;
+            $text .= TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'],
+                        $voter['votes']], $this->getConfig()->get('Text')).TF::RESET."\n";
         }
 
-        $this->particle->setText($text);
+        if($apply){
+            $this->particle->setText($text);
+        }
+
         return $text;
     }
 
@@ -75,7 +78,16 @@ class TopVoter extends PluginBase
         $this->voters = $voters;
     }
 
-    public function getVoters() : array{
+    public function getVoters(): array{
         return $this->voters;
     }
+
+    public function setWorlds(array $worlds){
+        $this->worlds = $worlds;
+    }
+
+    public function getWorlds(): array{
+        return $this->worlds;
+    }
+
 }

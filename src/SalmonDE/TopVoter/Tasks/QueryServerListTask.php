@@ -1,11 +1,10 @@
 <?php
+
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\AsyncTask;
-use SalmonDE\TopVoter\TopVoter;
 
-class QueryServerListTask extends AsyncTask
-{
+class QueryServerListTask extends AsyncTask {
 
     public function __construct(array $data){
         $this->data = $data;
@@ -15,7 +14,8 @@ class QueryServerListTask extends AsyncTask
         $success = true;
         $err = '';
 
-        $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [], $err);
+        $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [
+                        ], $err);
 
         if(strpos($raw, 'Error:') !== false){
             $err = trim(str_replace('Error:', '', $raw));
@@ -29,7 +29,8 @@ class QueryServerListTask extends AsyncTask
         $data = json_decode($raw, true);
 
         if($success && (!is_array($data) || empty($data))){
-            $this->setResult(['success' => false, 'error' => 'No array could be created!', 'response' => empty($raw) === false ? $raw : 'null']);
+            $this->setResult(['success' => false, 'error' => 'No array could be created!',
+                'response' => empty($raw) === false ? $raw : 'null']);
             $success = false;
         }
 
@@ -61,4 +62,5 @@ class QueryServerListTask extends AsyncTask
             }
         }
     }
+
 }
