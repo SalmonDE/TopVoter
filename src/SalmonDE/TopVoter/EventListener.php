@@ -1,11 +1,11 @@
 <?php
-
 namespace SalmonDE\TopVoter;
 
-use pocketmine\Player;
-use pocketmine\event\Listener;
 use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
+use pocketmine\Player;
+use SalmonDE\TopVoter\TopVoter;
 
 class EventListener implements Listener {
 

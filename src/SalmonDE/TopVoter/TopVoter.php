@@ -1,11 +1,11 @@
 <?php
-
 namespace SalmonDE\TopVoter;
 
 use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
+use SalmonDE\TopVoter\EventListener;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
@@ -88,6 +88,10 @@ class TopVoter extends PluginBase {
 
     public function getWorlds(): array{
         return $this->worlds;
+    }
+
+    public function getUpdateTask(): UpdateVotesTask{
+        return $this->updateTask;
     }
 
 }

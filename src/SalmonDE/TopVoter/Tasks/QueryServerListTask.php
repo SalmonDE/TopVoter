@@ -1,8 +1,9 @@
 <?php
-
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\AsyncTask;
+use pocketmine\Server;
+use pocketmine\utils\Utils;
 
 class QueryServerListTask extends AsyncTask {
 
@@ -14,7 +15,7 @@ class QueryServerListTask extends AsyncTask {
         $success = true;
         $err = '';
 
-        $raw = \pocketmine\utils\Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [
+        $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [
                         ], $err);
 
         if(strpos($raw, 'Error:') !== false){
@@ -39,7 +40,7 @@ class QueryServerListTask extends AsyncTask {
         }
     }
 
-    public function onCompletion(\pocketmine\Server $server){
+    public function onCompletion(Server $server){
         $inst = $server->getPluginManager()->getPlugin('TopVoter');
 
         if($inst->isDisabled()){
@@ -57,8 +58,9 @@ class QueryServerListTask extends AsyncTask {
             $inst->getLogger()->error('Error: '.$this->getResult()['error']);
             $inst->getLogger()->debug('Raw: '.$this->getResult()['response']);
 
-            if($this->getResult()['error'] === 'server key not found'){
-                $inst->updateTask->data['Key'] = null;
+            if($this->getResult()['error'] === 'no server key'){
+                $inst->getUpdateTask()->unsetKey();
+                $server->getPluginManager()->disablePlugin($inst);
             }
         }
     }

@@ -1,12 +1,14 @@
 <?php
-
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\PluginTask;
+use SalmonDE\TopVoter\TopVoter;
 
 class UpdateVotesTask extends PluginTask {
 
-    public function __construct(\SalmonDE\TopVoter\TopVoter $owner){
+    private $data = [];
+
+    public function __construct(TopVoter $owner){
         parent::__construct($owner);
 
         $this->data = [
@@ -15,12 +17,17 @@ class UpdateVotesTask extends PluginTask {
         ];
     }
 
-    public function onRun(int $currenttick){
+    public function unsetKey(){
+        $this->data['Key'] = null;
+    }
+
+    public function onRun(int $currentTick){
         if($this->data['Key'] !== null){
             $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data));
         }else{
             $this->getOwner()->getLogger()->warning('Invalid API key!');
             $this->getOwner()->getServer()->getScheduler()->cancelTask($this->getTaskId());
+            $this->getOwner()->getServer()->getPluginManager()->disablePlugin($this->getOwner());
         }
     }
 
