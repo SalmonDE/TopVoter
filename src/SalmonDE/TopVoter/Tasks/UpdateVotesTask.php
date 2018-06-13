@@ -1,19 +1,19 @@
 <?php
 namespace SalmonDE\TopVoter\Tasks;
 
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 use SalmonDE\TopVoter\TopVoter;
 
-class UpdateVotesTask extends PluginTask {
+class UpdateVotesTask extends Task {
 
+    private $owner;
     private $data = [];
 
     public function __construct(TopVoter $owner){
-        parent::__construct($owner);
-
+        $this->owner = $owner;
         $this->data = [
-            'Key' => $this->getOwner()->getConfig()->get('API-Key'),
-            'Amount' => (int) $this->getOwner()->getConfig()->get('Amount')
+            'Key' => $owner->getConfig()->get('API-Key'),
+            'Amount' => (int) $owner->getConfig()->get('Amount')
         ];
     }
 
@@ -23,11 +23,11 @@ class UpdateVotesTask extends PluginTask {
 
     public function onRun(int $currentTick){
         if($this->data['Key'] !== null){
-            $this->getOwner()->getServer()->getScheduler()->scheduleAsyncTask(new QueryServerListTask($this->data));
+            $this->owner->getServer()->getAsyncPool()->submitTask(new QueryServerListTask($this->data));
         }else{
-            $this->getOwner()->getLogger()->warning('Invalid API key!');
-            $this->getOwner()->getServer()->getScheduler()->cancelTask($this->getTaskId());
-            $this->getOwner()->getServer()->getPluginManager()->disablePlugin($this->getOwner());
+            $this->owner->getLogger()->warning('Invalid API key!');
+            $this->owner->getScheduler()->cancelTask($this->getTaskId());
+            $this->owner->getServer()->getPluginManager()->disablePlugin($this->owner);
         }
     }
 
