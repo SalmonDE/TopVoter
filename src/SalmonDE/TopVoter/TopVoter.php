@@ -5,7 +5,6 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
-use SalmonDE\TopVoter\EventListener;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
