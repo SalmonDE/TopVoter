@@ -5,7 +5,6 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\TextFormat as TF;
-use SalmonDE\TopVoter\EventListener;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
@@ -20,7 +19,7 @@ class TopVoter extends PluginBase {
         $this->saveResource('config.yml');
         $this->initParticle();
         $this->worlds = (array) $this->getConfig()->get('Worlds');
-        $this->getServer()->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
+        $this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
 
         $this->eventListener = $this->eventListener ?? new EventListener($this);
         $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
