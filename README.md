@@ -1,4 +1,5 @@
-# TopVoter [![Build Status](https://travis-ci.org/SalmonDE/TopVoter.svg?branch=master)](https://travis-ci.org/SalmonDE/TopVoter) [![Poggit-CI](https://poggit.pmmp.io/ci.badge/SalmonDE/TopVoter/TopVoter)](https://poggit.pmmp.io/ci/SalmonDE/TopVoter/TopVoter) </br>
+# TopVoter [![Poggit-CI](https://poggit.pmmp.io/ci.badge/SalmonDE/TopVoter/TopVoter)](https://poggit.pmmp.io/ci/SalmonDE/TopVoter/TopVoter) 
+
 TopVoter is a plugin that lists voters on your PocketMine-MP Server using FloatingTextParticles.
 
 ### **Requirements:**
