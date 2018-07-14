@@ -94,7 +94,7 @@ class TopVoter extends PluginBase {
 
     public function onDisable(): void{
         foreach($this->particles as $level => $particles){
-            $level = $this->getLevelByName($level);
+            $level = $this->getServer()->getLevelByName($level);
 
             if($level instanceof Level){
                 foreach($particles as $particle){
