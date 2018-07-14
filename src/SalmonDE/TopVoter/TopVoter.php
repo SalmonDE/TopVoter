@@ -1,79 +1,90 @@
 <?php
+declare(strict_types = 1);
+
 namespace SalmonDE\TopVoter;
 
+use pocketmine\level\Level;
 use pocketmine\level\particle\FloatingTextParticle;
+use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\TextFormat as TF;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
 
-    private $eventListener = null;
     private $updateTask;
+    private $particles = [];
+
     private $voters = [];
-    private $particle = null;
-    private $worlds = [];
 
-    public function onEnable(){
+    public function onEnable(): void{
         $this->saveResource('config.yml');
-        $this->initParticle();
-        $this->worlds = (array) $this->getConfig()->get('Worlds');
-        $this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), (($iv = $this->getConfig()->get('Update-Interval')) >= 180 ? $iv : 180) * 20);
+        $this->initParticles();
+        $this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), max(180, $this->getConfig()->get('Update-Interval')) * 20);
 
-        $this->eventListener = $this->eventListener ?? new EventListener($this);
-        $this->getServer()->getPluginManager()->registerEvents($this->eventListener, $this);
+        $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
     }
 
-    private function initParticle(){
-        if(!$this->particle instanceof FloatingTextParticle){
-            $pos = $this->getConfig()->get('Pos');
-            $this->particle = new FloatingTextParticle(new Vector3($pos['X'], $pos['Y'], $pos['Z']), '', TF::DARK_GREEN.TF::BOLD.$this->getConfig()->get('Header'));
-        }
-    }
-
-    public function sendParticle(array $players = null, bool $force = false){
-        $this->particle->setInvisible(false);
-
-        if($players === null){
-            $players = $this->getServer()->getOnlinePlayers();
-        }
-
-        foreach($players as $player){
-            if($force || in_array($player->getLevel()->getFolderName(), $this->getWorlds())){
-                $player->getLevel()->addParticle($this->particle, [$player]);
+    private function initParticles(): void{
+        foreach((array) $this->getConfig()->get('Positions') as $pos){
+            if(($level = $this->getServer()->getLevelByName($pos['world'])) instanceof Level){
+                $this->particles[$level->getFolderName()][] = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
             }
         }
     }
 
-    public function removeParticle(array $players = null){
-        $this->particle->setInvisible();
+    public function getParticles(): array{
+        return $this->particles;
+    }
 
-        if($players === null){
-            $players = $this->getServer()->getOnlinePlayers();
+    public function sendParticles(Level $level = null, array $players = null){
+        if($level === null){
+            foreach(array_keys($this->particles) as $level){
+                if(($level = $this->getServer()->getLevelByName($level)) instanceof Level){
+                    $this->sendParticles($level);
+                }
+            }
+
+            return;
         }
 
-        foreach($players as $player){
-            $player->getLevel()->addParticle($this->particle, [$player]);
+        if($players === null){
+            $players = $level->getPlayers();
+        }
+
+        foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
+            $particle->setInvisible(false);
+            $level->addParticle($particle, $players);
         }
     }
 
-    public function updateParticle(bool $apply = true): string{
+    public function removeParticles(Level $level, array $players = null){
+        if($players === null){
+            $players = $level->getPlayers();
+        }
+
+        foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
+            $particle->setInvisible();
+            $level->addParticle($particle, $players);
+            $particle->setInvisible(false);
+        }
+    }
+
+    public function updateParticles(): void{
         $text = '';
 
         foreach($this->voters as $voter){
-            $text .= TF::GOLD.str_replace(['{player}', '{votes}'], [$voter['nickname'],
-                        $voter['votes']], $this->getConfig()->get('Text')).TF::RESET."\n";
+            $text .= str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
         }
 
-        if($apply){
-            $this->particle->setText($text);
+        foreach($this->particles as $levelParticles){
+            foreach($levelParticles as $particle){
+                $particle->setText($text);
+            }
         }
-
-        return $text;
     }
 
-    public function setVoters(array $voters){
+    public function setVoters(array $voters): void{
         $this->voters = $voters;
     }
 
@@ -81,16 +92,20 @@ class TopVoter extends PluginBase {
         return $this->voters;
     }
 
-    public function setWorlds(array $worlds){
-        $this->worlds = $worlds;
-    }
+    public function onDisable(): void{
+        foreach($this->particles as $level => $particles){
+            $level = $this->getLevelByName($level);
 
-    public function getWorlds(): array{
-        return $this->worlds;
-    }
+            if($level instanceof Level){
+                foreach($particles as $particle){
+                    $particle->setInvisible();
+                    $level->addParticle($particle);
+                }
+            }
+        }
 
-    public function getUpdateTask(): UpdateVotesTask{
-        return $this->updateTask;
+        $this->particles = [];
+        $this->updateTask->unsetKey();
+        $this->getScheduler()->cancelTask($this->updateTask->getTaskId());
     }
-
 }

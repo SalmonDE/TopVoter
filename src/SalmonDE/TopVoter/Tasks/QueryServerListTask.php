@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\AsyncTask;
@@ -7,62 +9,55 @@ use pocketmine\utils\Utils;
 
 class QueryServerListTask extends AsyncTask {
 
-    public function __construct(array $data){
-        $this->data = $data;
+    private $key;
+    private $amount;
+
+    public function __construct(string $key, int $amount){
+        $this->key = $key;
+        $this->amount = $amount;
     }
 
-    public function onRun(){
-        $success = true;
+    public function onRun(): void{
         $err = '';
-
-        $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->data['Amount'].'&key='.$this->data['Key'], 10, [
-                        ], $err);
+        $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
 
         if(strpos($raw, 'Error:') !== false){
             $err = trim(str_replace('Error:', '', $raw));
         }
 
-        if($err !== ''){
-            $this->setResult(['success' => false, 'error' => $err, 'response' => empty($raw) === false ? $raw : 'null']);
-            $success = false;
-        }
+        if($err === ''){
+            $data = json_decode($raw, true);
 
-        $data = json_decode($raw, true);
-
-        if($success && (!is_array($data) || empty($data))){
-            $this->setResult(['success' => false, 'error' => 'No array could be created!',
-                'response' => empty($raw) === false ? $raw : 'null']);
-            $success = false;
-        }
-
-        if($success){
-            $this->setResult(['success' => true, 'voters' => $data['voters']]);
+            if(is_array($data)){
+                $this->setResult(['success' => true, 'voters' => $data['voters']]);
+            }
+        }else{
+            $this->setResult(['success' => false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
         }
     }
 
     public function onCompletion(Server $server){
-        $inst = $server->getPluginManager()->getPlugin('TopVoter');
+        $topVoter = $server->getPluginManager()->getPlugin('TopVoter');
 
-        if($inst->isDisabled()){
+        if($topVoter->isDisabled()){
             return;
         }
 
-        if($this->getResult()['success'] === true){
-            if($inst->getVoters() !== $this->getResult()['voters']){
-                $inst->setVoters($this->getResult()['voters']);
-                $inst->updateParticle();
-                $inst->sendParticle();
+        if($this->getResult()['success']){
+            if($topVoter->getVoters() !== $this->getResult()['voters']){
+                $topVoter->setVoters($this->getResult()['voters']);
+                $topVoter->updateParticles();
+                $topVoter->sendParticles();
             }
         }else{
-            $inst->getLogger()->warning('Error while processing data from the serverlist!');
-            $inst->getLogger()->error('Error: '.$this->getResult()['error']);
-            $inst->getLogger()->debug('Raw: '.$this->getResult()['response']);
+            $topVoter->getLogger()->warning('Error while processing data from the serverlist!');
+            $topVoter->getLogger()->error('Error: '.$this->getResult()['error']);
+            $topVoter->getLogger()->debug('Raw: '.$this->getResult()['response']);
 
-            if($this->getResult()['error'] === 'no server key'){
-                $inst->getUpdateTask()->unsetKey();
-                $server->getPluginManager()->disablePlugin($inst);
+            if($this->getResult()['error'] === 'no server key' || $this->getResult()['error'] === 'invalid server key'){
+                $topVoter->getUpdateTask()->unsetKey();
+                $server->getPluginManager()->disablePlugin($topVoter);
             }
         }
     }
-
 }

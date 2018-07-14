@@ -1,18 +1,20 @@
-#Position of the floating text particle
-Pos:
-  X: 0
-  "Y": 0
-  Z: 0
-#Worlds which will show the particle
-Worlds: [Lobby, Lobby1]
+#Positions of the floating texts
+Positions:
+    - world: Spawn
+      x: 0
+      "y": 0
+      z: 0
+    - world: Spawn
+      x: 2
+      "y": 0
+      z: 0
 #API-Key of your server provided by minecraftpocket-servers.com
 API-Key: ""
 #Amount of voters who shall be shown (Max: 500)
 Amount: 5
 #Update interval of the query to the server in seconds
-#SHOULD BE ATLEAST 180! OUTPUT IS CACHED FOR 3 MINUTES!
 Update-Interval: 180
 #Header of the floating text particle
-Header: "Top voters of the month <3"
+Header: "§6Top voters of the month <3"
 #Text for every row after the header
-Text: "{player} §9{votes}"
+Text: "§a{player} §d{votes}"

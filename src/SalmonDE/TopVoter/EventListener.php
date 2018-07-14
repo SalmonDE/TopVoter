@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 namespace SalmonDE\TopVoter;
 
 use pocketmine\event\entity\EntityLevelChangeEvent;
@@ -15,21 +17,17 @@ class EventListener implements Listener {
     }
 
     public function onJoin(PlayerJoinEvent $event){
-        if(in_array($event->getPlayer()->getLevel()->getFolderName(), $this->plugin->getWorlds())){
-            $this->plugin->sendParticle([$event->getPlayer()]);
-        }
+        $this->plugin->sendParticles($event->getPlayer()->getLevel(), [$event->getPlayer()]);
     }
 
+    /**
+    * @priority MONITOR
+    * @ignoreCancelled true
+    */
     public function onLevelChange(EntityLevelChangeEvent $event){
-        if(!$event->isCancelled()){
-            if($event->getEntity() instanceof Player){
-                if(!in_array($event->getTarget()->getFolderName(), $this->plugin->getWorlds())){
-                    $this->plugin->removeParticle([$event->getEntity()]);
-                }else{
-                    $this->plugin->sendParticle([$event->getEntity()], true);
-                }
-            }
+        if($event->getEntity() instanceof Player){
+            $this->plugin->removeParticles($event->getOrigin(), [$event->getEntity()]);
+            $this->plugin->sendParticles($event->getTarget(), [$event->getEntity()]);
         }
     }
-
 }
