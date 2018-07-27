@@ -5,7 +5,7 @@ namespace SalmonDE\TopVoter\Tasks;
 
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
-use pocketmine\utils\Utils;
+use pocketmine\utils\Internet;
 
 class QueryServerListTask extends AsyncTask {
 
@@ -19,7 +19,7 @@ class QueryServerListTask extends AsyncTask {
 
     public function onRun(): void{
         $err = '';
-        $raw = Utils::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
+        $raw = Internet::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
 
 
         if($err === ''){
