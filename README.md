@@ -7,7 +7,7 @@ TopVoter is a plugin that lists voters on your PocketMine-MP Server using Floati
 - An internet connection to connect to the [minecraftpocket-servers.com](minecraftpocket-servers.com) services.
 
 ### **"Error reading ca cert file"**
-If you get an error like this, make sure to take a look at issue #26 and follow the suggested instructions
+If you get an error like this, make sure to take a look at issue [#26](https://github.com/SalmonDE/TopVoter/issues/26) and follow the suggested instructions
 
 ### **For Developers:**
 - Check out our API Documentation [here](https://github.com/SalmonDE/TopVoter/wiki/API-Documentation).
