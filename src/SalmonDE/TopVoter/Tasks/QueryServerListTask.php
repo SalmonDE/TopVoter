@@ -21,7 +21,6 @@ class QueryServerListTask extends AsyncTask {
         $err = '';
         $raw = Internet::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
 
-
         if($err === ''){
             $data = json_decode($raw, true);
 
