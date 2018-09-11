@@ -37,8 +37,8 @@ class QueryServerListTask extends AsyncTask {
         }
     }
 
-    public function onCompletion(Server $server){
-        $topVoter = $server->getPluginManager()->getPlugin('TopVoter');
+    public function onCompletion(): void{
+        $topVoter = Server::getInstance()->getPluginManager()->getPlugin('TopVoter');
 
         if($topVoter->isDisabled()){
             return;
