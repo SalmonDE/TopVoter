@@ -7,7 +7,7 @@ use pocketmine\Player;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\Internet;
-use SalmonDE\TopVoter\Events\DataChangeEvent;
+use SalmonDE\TopVoter\Events\DataUpdateEvent;
 
 class QueryServerListTask extends AsyncTask {
 
@@ -57,7 +57,7 @@ class QueryServerListTask extends AsyncTask {
                 }
             }
 
-            $topVoter->getServer()->getPluginManager()->callEvent($event = new DataChangeEvent($topVoter, $voters));
+            $topVoter->getServer()->getPluginManager()->callEvent($event = new DataUpdateEvent($topVoter, $voters));
 
             if(!$event->isCancelled() && $topVoter->getVoters() !== $event->getVoteData()){
                 $topVoter->setVoters($event->getVoteData());

@@ -7,7 +7,7 @@ use pocketmine\event\Cancellable;
 use pocketmine\event\plugin\PluginEvent;
 use SalmonDE\TopVoter\TopVoter;
 
-class DataChangeEvent extends PluginEvent implements Cancellable {
+class DataUpdateEvent extends PluginEvent implements Cancellable {
 
     private $voteData;
 
