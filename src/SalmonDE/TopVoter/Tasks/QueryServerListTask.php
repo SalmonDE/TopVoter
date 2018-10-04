@@ -46,17 +46,17 @@ class QueryServerListTask extends AsyncTask {
         }
 
         if($this->getResult()['success']){
-            if($topVoter->getVoters() !== $this->getResult()['voters']){
-                $voters = $this->getResult()['voters'];
+            $voters = $this->getResult()['voters'];
 
-                if($topVoter->getConfig()->get('Check-Name', true)){
-                    foreach($voters as $index => $voteData){
-                        if(!Player::isValidUsername($voteData['nickname'])){
-                            unset($voters[$index]);
-                        }
+            if($topVoter->getConfig()->get('Check-Name', true)){
+                foreach($voters as $index => $voteData){
+                    if(!Player::isValidUsername($voteData['nickname'])){
+                        unset($voters[$index]);
                     }
                 }
+            }
 
+            if($topVoter->getVoters() !== $voters){
                 $topVoter->setVoters($voters);
                 $topVoter->updateParticles();
                 $topVoter->sendParticles();
