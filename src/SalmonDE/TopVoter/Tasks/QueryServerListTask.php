@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace SalmonDE\TopVoter\Tasks;
 
+use pocketmine\Player;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\Internet;
@@ -46,7 +47,17 @@ class QueryServerListTask extends AsyncTask {
 
         if($this->getResult()['success']){
             if($topVoter->getVoters() !== $this->getResult()['voters']){
-                $topVoter->setVoters($this->getResult()['voters']);
+                $voters = $this->getResult()['voters'];
+
+                if($topVoter->getConfig()->get('Check-Name', true)){
+                    foreach($voters as $index => $voteData){
+                        if(!Player::isValidUsername($voteData['nickname'])){
+                            unset($voters[$index]);
+                        }
+                    }
+                }
+
+                $topVoter->setVoters($voters);
                 $topVoter->updateParticles();
                 $topVoter->sendParticles();
             }

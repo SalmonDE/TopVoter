@@ -18,3 +18,6 @@ Update-Interval: 180
 Header: "§6Top voters of the month <3"
 #Text for every row after the header
 Text: "§a{player} §d{votes}"
+#Check if the name of a voter is valid
+#Votes of invalidly named players will be discarded if enabled
+Check-Name: true
