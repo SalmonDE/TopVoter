@@ -28,7 +28,9 @@ class TopVoter extends PluginBase {
     private function initParticles(): void{
         foreach((array) $this->getConfig()->get('Positions') as $pos){
             if(($level = $this->getServer()->getLevelByName($pos['world'])) instanceof Level){
-                $this->particles[$level->getFolderName()][] = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
+                $particle = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
+                $particle->encode(); // prevent empty batch error
+                $this->particles[$level->getFolderName()][] = $particle;
             }
         }
     }
