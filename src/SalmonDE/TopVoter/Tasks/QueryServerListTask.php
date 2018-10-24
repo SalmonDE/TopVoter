@@ -57,7 +57,7 @@ class QueryServerListTask extends AsyncTask {
                 }
             }
 
-            $topVoter->getServer()->getPluginManager()->callEvent($event = new DataUpdateEvent($topVoter, $voters));
+            ($event = new DataUpdateEvent($topVoter, $voters))->call();
 
             if(!$event->isCancelled() && $topVoter->getVoters() !== $event->getVoteData()){
                 $topVoter->setVoters($event->getVoteData());
