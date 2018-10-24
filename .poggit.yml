@@ -1,6 +1,7 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/SalmonDE/TopVoter
 branches:
 - master
+- api-3.0.0
 projects:
   TopVoter:
     path: ""
