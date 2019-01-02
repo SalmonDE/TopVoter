@@ -24,18 +24,18 @@ class QueryServerListTask extends AsyncTask {
         $raw = Internet::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
 
         if($err === ''){
-            $data = json_decode($raw, true);
+            $data = \json_decode($raw, \true);
 
-            if(is_array($data)){
-                $this->setResult(['success' => true, 'voters' => $data['voters']]);
+            if(\is_array($data)){
+                $this->setResult(['success' => \true, 'voters' => $data['voters']]);
             }
         }else{
-            $this->setResult(['success' => false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
+            $this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
             return;
         }
 
-        if(strpos($raw, 'Error:') !== false){
-            $err = trim(str_replace('Error:', '', $raw));
+        if(\strpos($raw, 'Error:') !== \false){
+            $err = \trim(\str_replace('Error:', '', $raw));
         }
     }
 
@@ -49,7 +49,7 @@ class QueryServerListTask extends AsyncTask {
         if($this->getResult()['success']){
             $voters = $this->getResult()['voters'];
 
-            if($topVoter->getConfig()->get('Check-Name', true)){
+            if($topVoter->getConfig()->get('Check-Name', \true)){
                 foreach($voters as $index => $voteData){
                     if(!Player::isValidUsername($voteData['nickname'])){
                         unset($voters[$index]);

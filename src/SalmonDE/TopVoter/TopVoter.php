@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace SalmonDE\TopVoter;
 
 use pocketmine\level\Level;
-use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
@@ -20,7 +19,7 @@ class TopVoter extends PluginBase {
     public function onEnable(): void{
         $this->saveResource('config.yml');
         $this->initParticles();
-        $this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), max(180, $this->getConfig()->get('Update-Interval')) * 20);
+        $this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), \max(180, $this->getConfig()->get('Update-Interval')) * 20);
 
         $this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
     }
@@ -29,7 +28,7 @@ class TopVoter extends PluginBase {
         foreach((array) $this->getConfig()->get('Positions') as $pos){
             if(($level = $this->getServer()->getLevelByName($pos['world'])) instanceof Level){
                 $particle = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
-                $particle->encode(); // prevent empty batch error
+                $particle->encode($particle->getVector3()); // prevent empty batch error
                 $this->particles[$level->getFolderName()][] = $particle;
             }
         }
@@ -39,9 +38,9 @@ class TopVoter extends PluginBase {
         return $this->particles;
     }
 
-    public function sendParticles(Level $level = null, array $players = null){
-        if($level === null){
-            foreach(array_keys($this->particles) as $level){
+    public function sendParticles(Level $level = \null, array $players = \null){
+        if($level === \null){
+            foreach(\array_keys($this->particles) as $level){
                 if(($level = $this->getServer()->getLevelByName($level)) instanceof Level){
                     $this->sendParticles($level);
                 }
@@ -50,25 +49,25 @@ class TopVoter extends PluginBase {
             return;
         }
 
-        if($players === null){
+        if($players === \null){
             $players = $level->getPlayers();
         }
 
         foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
-            $particle->setInvisible(false);
-            $level->addParticle($particle, $players);
+            $particle->setInvisible(\false);
+            $level->addParticle($particle->getVector3(), $particle, $players);
         }
     }
 
-    public function removeParticles(Level $level, array $players = null){
-        if($players === null){
+    public function removeParticles(Level $level, array $players = \null){
+        if($players === \null){
             $players = $level->getPlayers();
         }
 
         foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
             $particle->setInvisible();
-            $level->addParticle($particle, $players);
-            $particle->setInvisible(false);
+            $level->addParticle($particle->getVector3(), $particle, $players);
+            $particle->setInvisible(\false);
         }
     }
 
@@ -76,7 +75,7 @@ class TopVoter extends PluginBase {
         $text = '';
 
         foreach($this->voters as $voter){
-            $text .= str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
+            $text .= \str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
         }
 
         foreach($this->particles as $levelParticles){
@@ -101,13 +100,16 @@ class TopVoter extends PluginBase {
             if($level instanceof Level){
                 foreach($particles as $particle){
                     $particle->setInvisible();
-                    $level->addParticle($particle);
+                    $level->addParticle($particle->getVector3(), $particle);
                 }
             }
         }
 
         $this->particles = [];
-        $this->updateTask->unsetKey();
-        $this->getScheduler()->cancelTask($this->updateTask->getTaskId());
+
+        if(isset($this->updateTask)){
+            $this->updateTask->unsetKey();
+            $this->getScheduler()->cancelTask($this->updateTask->getTaskId());
+        }
     }
 }

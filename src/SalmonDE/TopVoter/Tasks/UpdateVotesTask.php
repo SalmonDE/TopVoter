@@ -9,17 +9,17 @@ use SalmonDE\TopVoter\TopVoter;
 class UpdateVotesTask extends Task {
 
     private $owner;
-    private $key = null;
+    private $key = \null;
     private $amount;
 
     public function __construct(TopVoter $owner){
         $this->owner = $owner;
         $this->key = $owner->getConfig()->get('API-Key');
-        $this->amount = min(500, (int) $owner->getConfig()->get('Amount'));
+        $this->amount = \min(500, (int) $owner->getConfig()->get('Amount'));
     }
 
     public function unsetKey(): void{
-        $this->key = null;
+        $this->key = \null;
     }
 
     public function onRun(int $currentTick): void{
