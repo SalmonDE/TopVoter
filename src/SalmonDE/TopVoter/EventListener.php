@@ -10,24 +10,24 @@ use pocketmine\Player;
 
 class EventListener implements Listener {
 
-    private $plugin;
+	private $plugin;
 
-    public function __construct(TopVoter $plugin){
-        $this->plugin = $plugin;
-    }
+	public function __construct(TopVoter $plugin){
+		$this->plugin = $plugin;
+	}
 
-    public function onJoin(PlayerJoinEvent $event){
-        $this->plugin->sendParticles($event->getPlayer()->getLevel(), [$event->getPlayer()]);
-    }
+	public function onJoin(PlayerJoinEvent $event){
+		$this->plugin->sendParticles($event->getPlayer()->getLevel(), [$event->getPlayer()]);
+	}
 
-    /**
-    * @priority MONITOR
-    * @ignoreCancelled true
-    */
-    public function onLevelChange(EntityLevelChangeEvent $event){
-        if($event->getEntity() instanceof Player){
-            $this->plugin->removeParticles($event->getOrigin(), [$event->getEntity()]);
-            $this->plugin->sendParticles($event->getTarget(), [$event->getEntity()]);
-        }
-    }
+	/**
+	* @priority MONITOR
+	* @ignoreCancelled true
+	*/
+	public function onLevelChange(EntityLevelChangeEvent $event){
+		if($event->getEntity() instanceof Player){
+			$this->plugin->removeParticles($event->getOrigin(), [$event->getEntity()]);
+			$this->plugin->sendParticles($event->getTarget(), [$event->getEntity()]);
+		}
+	}
 }
