@@ -11,68 +11,68 @@ use SalmonDE\TopVoter\Events\DataUpdateEvent;
 
 class QueryServerListTask extends AsyncTask {
 
-    private $key;
-    private $amount;
+	private const BASE_URL = 'https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit={AMOUNT}&key={KEY}';
 
-    public function __construct(string $key, int $amount){
-        $this->key = $key;
-        $this->amount = $amount;
-    }
+	private $key;
+	private $amount;
 
-    public function onRun(): void{
-        $err = '';
-        $raw = Internet::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
+	public function __construct(string $key, int $amount){
+		$this->key = $key;
+		$this->amount = $amount;
+	}
 
-        if($err === ''){
-            $data = json_decode($raw, true);
+	public function onRun(): void{
+		$err = '';
+		$raw = Internet::getURL(str_replace(['{AMOUNT}', '{KEY}'], [$this->amount, $this->key], self::BASE_URL), 10, [], $err);
 
-            if(is_array($data)){
-                $this->setResult(['success' => true, 'voters' => $data['voters']]);
-            }
-        }else{
-            $this->setResult(['success' => false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
-            return;
-        }
+		if($err === ''){
+			$data = \json_decode($raw, \true);
 
-        if(strpos($raw, 'Error:') !== false){
-            $err = trim(str_replace('Error:', '', $raw));
-        }
-    }
+			if(\is_array($data)){
+				$this->setResult(['success' => \true, 'voters' => $data['voters']]);
+				return;
+			}elseif(\strpos($raw, 'Error:') !== \false){
+				$err = \trim(\str_replace('Error:', '', $raw));
+			}
+		}
 
-    public function onCompletion(Server $server){
-        $topVoter = $server->getPluginManager()->getPlugin('TopVoter');
+		$this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
+	}
 
-        if($topVoter->isDisabled()){
-            return;
-        }
+	public function onCompletion(Server $server){
+		$topVoter = $server->getPluginManager()->getPlugin('TopVoter');
 
-        if($this->getResult()['success']){
-            $voters = $this->getResult()['voters'];
+		if($topVoter->isDisabled()){
+			return;
+		}
 
-            if($topVoter->getConfig()->get('Check-Name', true)){
-                foreach($voters as $index => $voteData){
-                    if(!Player::isValidUsername($voteData['nickname'])){
-                        unset($voters[$index]);
-                    }
-                }
-            }
+		if($this->getResult()['success']){
+			$voters = $this->getResult()['voters'];
 
-            $topVoter->getServer()->getPluginManager()->callEvent($event = new DataUpdateEvent($topVoter, $voters));
+			if($topVoter->getConfig()->get('Check-Name', true)){
+				foreach($voters as $index => $voteData){
+					if(!Player::isValidUsername($voteData['nickname'])){
+						unset($voters[$index]);
+					}
+				}
+			}
 
-            if(!$event->isCancelled() && $topVoter->getVoters() !== $event->getVoteData()){
-                $topVoter->setVoters($event->getVoteData());
-                $topVoter->updateParticles();
-                $topVoter->sendParticles();
-            }
-        }else{
-            $topVoter->getLogger()->warning('Error while processing data from the serverlist!');
-            $topVoter->getLogger()->error('Error: '.$this->getResult()['error']);
-            $topVoter->getLogger()->debug('Raw: '.$this->getResult()['response']);
+			$topVoter->getServer()->getPluginManager()->callEvent($event = new DataUpdateEvent($topVoter, $voters));
 
-            if($this->getResult()['error'] === 'no server key' || $this->getResult()['error'] === 'invalid server key'){
-                $topVoter->getUpdateTask()->unsetKey();
-                $topVoter->getServer()->getPluginManager()->disablePlugin($topVoter);
-            }
-        }
-    }
+			if(!$event->isCancelled() && $topVoter->getVoters() !== $event->getVoteData()){
+				$topVoter->setVoters($event->getVoteData());
+				$topVoter->updateParticles();
+				$topVoter->sendParticles();
+			}
+		}else{
+			$topVoter->getLogger()->warning('Error while processing data from the serverlist!');
+			$topVoter->getLogger()->error('Error: '.$this->getResult()['error']);
+			$topVoter->getLogger()->debug('Raw: '.$this->getResult()['response']);
+
+			if($this->getResult()['error'] === 'no server key' || $this->getResult()['error'] === 'invalid server key'){
+				$topVoter->getUpdateTask()->unsetKey();
+				$topVoter->getServer()->getPluginManager()->disablePlugin($topVoter);
+			}
+		}
+	}
 }
