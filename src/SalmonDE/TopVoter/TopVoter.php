@@ -93,6 +93,10 @@ class TopVoter extends PluginBase {
 		return $this->voters;
 	}
 
+	public function getUpdateTask(): ?UpdateVotesTask{
+		return $this->updateTask;
+	}
+
 	public function onDisable(): void{
 		foreach($this->particles as $level => $particles){
 			$level = $this->getServer()->getLevelManager()->getLevelByName($level);

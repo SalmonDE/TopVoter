@@ -28,15 +28,13 @@ class QueryServerListTask extends AsyncTask {
 
 			if(\is_array($data)){
 				$this->setResult(['success' => \true, 'voters' => $data['voters']]);
+				return;
+			}elseif(\strpos($raw, 'Error:') !== \false){
+				$err = \trim(\str_replace('Error:', '', $raw));
 			}
-		}else{
-			$this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
-			return;
 		}
 
-		if(\strpos($raw, 'Error:') !== \false){
-			$err = \trim(\str_replace('Error:', '', $raw));
-		}
+		$this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
 	}
 
 	public function onCompletion(): void{
