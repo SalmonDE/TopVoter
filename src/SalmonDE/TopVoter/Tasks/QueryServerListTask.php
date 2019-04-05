@@ -34,12 +34,19 @@ class QueryServerListTask extends AsyncTask {
 			}elseif(\strpos($raw, 'Error:') !== \false){
 				$err = \trim(\str_replace('Error:', '', $raw));
 			}
+		}else{
+			$this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
+			return;
+		}
+
+		if(\strpos($raw, 'Error:') !== \false){
+			$err = \trim(\str_replace('Error:', '', $raw));
 		}
 
 		$this->setResult(['success' => \false, 'error' => $err, 'response' => empty($raw) ? 'null' : $raw]);
 	}
 
-	public function onCompletion(Server $server){
+	public function onCompletion(Server $server): void{
 		$topVoter = $server->getPluginManager()->getPlugin('TopVoter');
 
 		if($topVoter->isDisabled()){
