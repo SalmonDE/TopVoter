@@ -11,6 +11,8 @@ use SalmonDE\TopVoter\Events\DataUpdateEvent;
 
 class QueryServerListTask extends AsyncTask {
 
+	private const BASE_URL = 'https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit={AMOUNT}&key={KEY}';
+
 	private $key;
 	private $amount;
 
@@ -21,7 +23,7 @@ class QueryServerListTask extends AsyncTask {
 
 	public function onRun(): void{
 		$err = '';
-		$raw = Internet::getURL('https://minecraftpocket-servers.com/api/?object=servers&element=voters&month=current&format=json&limit='.$this->amount.'&key='.$this->key, 10, [], $err);
+		$raw = Internet::getURL(str_replace(['{AMOUNT}', '{KEY}'], [$this->amount, $this->key], self::BASE_URL), 10, [], $err);
 
 		if($err === ''){
 			$data = \json_decode($raw, \true);
