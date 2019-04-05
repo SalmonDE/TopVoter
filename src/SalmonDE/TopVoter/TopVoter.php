@@ -26,7 +26,7 @@ class TopVoter extends PluginBase {
 
 	private function initParticles(): void{
 		foreach((array) $this->getConfig()->get('Positions') as $pos){
-			if(($level = $this->getServer()->getLevelManager()->getLevelByName($pos['world'])) instanceof Level){
+			if(($level = $this->getServer()->getLevelByName($pos['world'])) instanceof Level){
 				$particle = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
 				$particle->encode($particle->getVector3()); // prevent empty batch error
 				$this->particles[$level->getFolderName()][] = $particle;
@@ -41,7 +41,7 @@ class TopVoter extends PluginBase {
 	public function sendParticles(Level $level = \null, array $players = \null){
 		if($level === \null){
 			foreach(\array_keys($this->particles) as $level){
-				if(($level = $this->getServer()->getLevelManager()->getLevelByName($level)) instanceof Level){
+				if(($level = $this->getServer()->getLevelByName($level)) instanceof Level){
 					$this->sendParticles($level);
 				}
 			}
@@ -93,13 +93,9 @@ class TopVoter extends PluginBase {
 		return $this->voters;
 	}
 
-	public function getUpdateTask(): ?UpdateVotesTask{
-		return $this->updateTask;
-	}
-
 	public function onDisable(): void{
 		foreach($this->particles as $level => $particles){
-			$level = $this->getServer()->getLevelManager()->getLevelByName($level);
+			$level = $this->getServer()->getLevelByName($level);
 
 			if($level instanceof Level){
 				foreach($particles as $particle){
