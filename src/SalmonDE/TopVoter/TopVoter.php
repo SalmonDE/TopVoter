@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace SalmonDE\TopVoter;
 
-use pocketmine\level\Level;
-use pocketmine\level\Position;
+use pocketmine\world\World;
+use pocketmine\world\Position;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
@@ -26,10 +26,10 @@ class TopVoter extends PluginBase {
 
 	private function initParticles(): void{
 		foreach((array) $this->getConfig()->get('Positions') as $pos){
-			if(($level = $this->getServer()->getLevelManager()->getLevelByName($pos['world'])) instanceof Level){
+			if(($world = $this->getServer()->getWorldManager()->getWorldByName($pos['world'])) instanceof Level){
 				$particle = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
 				$particle->encode($particle->getVector3()); // prevent empty batch error
-				$this->particles[$level->getFolderName()][] = $particle;
+				$this->particles[$world->getFolderName()][] = $particle;
 			}
 		}
 	}
@@ -38,10 +38,10 @@ class TopVoter extends PluginBase {
 		return $this->particles;
 	}
 
-	public function sendParticles(Level $level = \null, array $players = \null){
-		if($level === \null){
+	public function sendParticles(World $world = \null, array $players = \null){
+		if($world === \null){
 			foreach(\array_keys($this->particles) as $level){
-				if(($level = $this->getServer()->getLevelManager()->getLevelByName($level)) instanceof Level){
+				if(($world = $this->getServer()->getWorldManager()->getWorldByName($level)) instanceof Level){
 					$this->sendParticles($level);
 				}
 			}
@@ -50,23 +50,23 @@ class TopVoter extends PluginBase {
 		}
 
 		if($players === \null){
-			$players = $level->getPlayers();
+			$players = $world->getPlayers();
 		}
 
-		foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
+		foreach($this->particles[$world->getFolderName()] ?? [] as $particle){
 			$particle->setInvisible(\false);
-			$level->addParticle($particle->getVector3(), $particle, $players);
+			$world->addParticle($particle->getVector3(), $particle, $players);
 		}
 	}
 
-	public function removeParticles(Level $level, array $players = \null){
+	public function removeParticles(World $world, array $players = \null){
 		if($players === \null){
-			$players = $level->getPlayers();
+			$players = $world->getPlayers();
 		}
 
-		foreach($this->particles[$level->getFolderName()] ?? [] as $particle){
+		foreach($this->particles[$world->getFolderName()] ?? [] as $particle){
 			$particle->setInvisible();
-			$level->addParticle($particle->getVector3(), $particle, $players);
+			$world->addParticle($particle->getVector3(), $particle, $players);
 			$particle->setInvisible(\false);
 		}
 	}
@@ -98,13 +98,13 @@ class TopVoter extends PluginBase {
 	}
 
 	public function onDisable(): void{
-		foreach($this->particles as $level => $particles){
-			$level = $this->getServer()->getLevelManager()->getLevelByName($level);
+		foreach($this->particles as $world => $particles){
+			$world = $this->getServer()->getWorldManager()->getWorldByName($level);
 
-			if($level instanceof Level){
+			if($world instanceof Level){
 				foreach($particles as $particle){
 					$particle->setInvisible();
-					$level->addParticle($particle->getVector3(), $particle);
+					$world->addParticle($particle->getVector3(), $particle);
 				}
 			}
 		}

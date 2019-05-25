@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace SalmonDE\TopVoter;
 
-use pocketmine\level\particle\FloatingTextParticle as FTP;
+use pocketmine\world\particle\FloatingTextParticle as FTP;
 use pocketmine\math\Vector3;
 
 class FloatingTextParticle extends FTP {
