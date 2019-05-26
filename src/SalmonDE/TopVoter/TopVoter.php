@@ -26,7 +26,7 @@ class TopVoter extends PluginBase {
 
 	private function initParticles(): void{
 		foreach((array) $this->getConfig()->get('Positions') as $pos){
-			if(($world = $this->getServer()->getWorldManager()->getWorldByName($pos['world'])) instanceof Level){
+			if(($world = $this->getServer()->getWorldManager()->getWorldByName($pos['world'])) instanceof World){
 				$particle = new FloatingTextParticle(new Vector3($pos['x'], $pos['y'], $pos['z']), '', $this->getConfig()->get('Header'));
 				$particle->encode($particle->getVector3()); // prevent empty batch error
 				$this->particles[$world->getFolderName()][] = $particle;
@@ -40,9 +40,9 @@ class TopVoter extends PluginBase {
 
 	public function sendParticles(World $world = \null, array $players = \null){
 		if($world === \null){
-			foreach(\array_keys($this->particles) as $level){
-				if(($world = $this->getServer()->getWorldManager()->getWorldByName($level)) instanceof Level){
-					$this->sendParticles($level);
+			foreach(\array_keys($this->particles) as $world){
+				if(($world = $this->getServer()->getWorldManager()->getWorldByName($world)) instanceof World){
+					$this->sendParticles($world);
 				}
 			}
 
@@ -78,8 +78,8 @@ class TopVoter extends PluginBase {
 			$text .= \str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
 		}
 
-		foreach($this->particles as $levelParticles){
-			foreach($levelParticles as $particle){
+		foreach($this->particles as $worldParticles){
+			foreach($worldParticles as $particle){
 				$particle->setText($text);
 			}
 		}
@@ -99,9 +99,9 @@ class TopVoter extends PluginBase {
 
 	public function onDisable(): void{
 		foreach($this->particles as $world => $particles){
-			$world = $this->getServer()->getWorldManager()->getWorldByName($level);
+			$world = $this->getServer()->getWorldManager()->getWorldByName($world);
 
-			if($world instanceof Level){
+			if($world instanceof World){
 				foreach($particles as $particle){
 					$particle->setInvisible();
 					$world->addParticle($particle->getVector3(), $particle);
