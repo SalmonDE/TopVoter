@@ -31,4 +31,8 @@ class UpdateVotesTask extends Task {
 			$this->owner->getServer()->getPluginManager()->disablePlugin($this->owner);
 		}
 	}
+
+	public function onCancel(): void{
+		$this->unsetKey();
+	}
 }

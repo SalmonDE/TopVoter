@@ -119,9 +119,5 @@ class TopVoter extends PluginBase {
 		}
 
 		$this->particles = [];
-		if($this->updateTask instanceof UpdateVotesTask) {
-			$this->updateTask->unsetKey();
-		}
-		$this->getScheduler()->cancelTask($this->updateTask->getTaskId());
 	}
 }
