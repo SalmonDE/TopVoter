@@ -21,3 +21,5 @@ Text: "§a{player} §d{votes}"
 #Check if the name of a voter is valid
 #Votes of invalidly named players will be discarded if enabled
 Check-Name: true
+#When set to true PocketVote will provide aggregated top voters instead of using your API-Key
+Use-PocketVote: false
