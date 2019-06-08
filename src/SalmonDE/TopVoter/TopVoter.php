@@ -17,9 +17,19 @@ class TopVoter extends PluginBase {
 
 	private $voters = [];
 
+	public $usePocketVote = false;
+
 	public function onEnable(): void{
 		$this->saveResource('config.yml');
 		$this->initParticles();
+
+		// Check if we want to enable PocketVote support.
+		if(empty($this->getConfig()->get('API-Key')) || $this->getConfig()->get('Use-PocketVote')) {
+		    // If key is not set and PocketVote is loaded, use PocketVote.
+            // If Use-PocketVote is set to true and plugin is loaded, use PocketVote.
+            $this->usePocketVote = $this->getServer()->getPluginManager()->getPlugin('PocketVote') !== null;
+        }
+
 		$this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), max(180, $this->getConfig()->get('Update-Interval')) * 20);
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
