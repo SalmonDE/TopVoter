@@ -8,7 +8,7 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
-use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
+use SalmonDE\TopVoter\Tasks\{UpdateVotesTask, PocketVoteUpdateTask};
 
 class TopVoter extends PluginBase {
 
@@ -17,20 +17,22 @@ class TopVoter extends PluginBase {
 
 	private $voters = [];
 
-	public $usePocketVote = false;
-
 	public function onEnable(): void{
 		$this->saveResource('config.yml');
 		$this->initParticles();
 
 		// Check if we want to enable PocketVote support.
 		if(empty($this->getConfig()->get('API-Key')) || $this->getConfig()->get('Use-PocketVote')) {
-		    // If key is not set and PocketVote is loaded, use PocketVote.
-            // If Use-PocketVote is set to true and plugin is loaded, use PocketVote.
-            $this->usePocketVote = $this->getServer()->getPluginManager()->getPlugin('PocketVote') !== null;
-        }
+			// If key is not set and PocketVote is loaded, use PocketVote.
+			// If Use-PocketVote is set to true and plugin is loaded, use PocketVote.
+			if($this->getServer()->getPluginManager()->getPlugin('PocketVote') !== null) {
+				$this->getScheduler()->scheduleRepeatingTask($this->updateTask = new PocketVoteUpdateTask($this), max(1, $this->getConfig()->get('Update-Interval')) * 20);
+			}
+		}
 
-		$this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), max(180, $this->getConfig()->get('Update-Interval')) * 20);
+		if(!$this->updateTask) {
+			$this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), max(180, $this->getConfig()->get('Update-Interval')) * 20);
+		}
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 	}
@@ -117,7 +119,9 @@ class TopVoter extends PluginBase {
 		}
 
 		$this->particles = [];
-		$this->updateTask->unsetKey();
+		if($this->updateTask instanceof UpdateVotesTask) {
+			$this->updateTask->unsetKey();
+		}
 		$this->getScheduler()->cancelTask($this->updateTask->getTaskId());
 	}
 }
