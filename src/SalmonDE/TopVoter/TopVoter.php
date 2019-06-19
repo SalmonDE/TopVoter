@@ -8,7 +8,8 @@ use pocketmine\level\particle\FloatingTextParticle;
 use pocketmine\level\Position;
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
-use SalmonDE\TopVoter\Tasks\{UpdateVotesTask, PocketVoteUpdateTask};
+use SalmonDE\TopVoter\Tasks\PocketVoteUpdateTask;
+use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
 
