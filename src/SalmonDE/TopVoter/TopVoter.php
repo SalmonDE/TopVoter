@@ -16,7 +16,7 @@ class TopVoter extends PluginBase {
 
 	private $voters = [];
 
-	public function onEnable(): void{
+	protected function onEnable(): void{
 		$this->saveResource('config.yml');
 		$this->initParticles();
 		$this->getScheduler()->scheduleRepeatingTask($this->updateTask = new UpdateVotesTask($this), \max(180, $this->getConfig()->get('Update-Interval')) * 20);
@@ -97,7 +97,7 @@ class TopVoter extends PluginBase {
 		return $this->updateTask;
 	}
 
-	public function onDisable(): void{
+	protected function onDisable(): void{
 		foreach($this->particles as $world => $particles){
 			$world = $this->getServer()->getWorldManager()->getWorldByName($world);
 
