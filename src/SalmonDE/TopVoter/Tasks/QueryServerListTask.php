@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace SalmonDE\TopVoter\Tasks;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\scheduler\AsyncTask;
 use pocketmine\Server;
 use pocketmine\utils\Internet;

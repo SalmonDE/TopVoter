@@ -6,7 +6,7 @@ namespace SalmonDE\TopVoter;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 class EventListener implements Listener {
 
