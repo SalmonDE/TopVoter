@@ -3,10 +3,12 @@ declare(strict_types = 1);
 
 namespace SalmonDE\TopVoter;
 
-use pocketmine\world\World;
-use pocketmine\world\Position;
+
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
+use pocketmine\task\TaskHandler;
+use pocketmine\world\World;
+use pocketmine\world\Position;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
@@ -113,7 +115,10 @@ class TopVoter extends PluginBase {
 
 		if(isset($this->updateTask)){
 			$this->updateTask->unsetKey();
-			$this->getScheduler()->cancelTask($this->updateTask->getTaskId());
+
+			if($this->updateTask->getHandler() instanceof TaskHandler){
+				$this->updateTask->getHandler()->cancel();
+			}
 		}
 	}
 }
