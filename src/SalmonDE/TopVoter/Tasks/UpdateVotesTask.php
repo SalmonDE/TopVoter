@@ -22,12 +22,12 @@ class UpdateVotesTask extends Task {
 		$this->key = \null;
 	}
 
-	public function onRun(int $currentTick): void{
+	public function onRun(): void{
 		if(!empty($this->key)){
 			$this->owner->getServer()->getAsyncPool()->submitTask(new QueryServerListTask($this->key, $this->amount));
 		}else{
 			$this->owner->getLogger()->warning('Invalid API key');
-			$this->owner->getScheduler()->cancelTask($this->getTaskId());
+			$this->getHandler()->cancel();
 			$this->owner->getServer()->getPluginManager()->disablePlugin($this->owner);
 		}
 	}
