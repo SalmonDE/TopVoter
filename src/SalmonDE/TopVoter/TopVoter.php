@@ -6,9 +6,8 @@ namespace SalmonDE\TopVoter;
 
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
-use pocketmine\task\TaskHandler;
+use pocketmine\scheduler\TaskHandler;
 use pocketmine\world\World;
-use pocketmine\world\Position;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
