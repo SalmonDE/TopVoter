@@ -78,6 +78,7 @@ class TopVoter extends PluginBase {
 		foreach($this->voters as $voter){
 			$text .= \str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
 		}
+        $text = trim($text);
 
 		foreach($this->particles as $worldParticles){
 			foreach($worldParticles as $particle){
