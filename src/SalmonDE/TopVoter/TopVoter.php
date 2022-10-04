@@ -6,9 +6,8 @@ namespace SalmonDE\TopVoter;
 
 use pocketmine\math\Vector3;
 use pocketmine\plugin\PluginBase;
-use pocketmine\task\TaskHandler;
+use pocketmine\scheduler\TaskHandler;
 use pocketmine\world\World;
-use pocketmine\world\Position;
 use SalmonDE\TopVoter\Tasks\UpdateVotesTask;
 
 class TopVoter extends PluginBase {
@@ -79,6 +78,7 @@ class TopVoter extends PluginBase {
 		foreach($this->voters as $voter){
 			$text .= \str_replace(['{player}', '{votes}'], [$voter['nickname'], $voter['votes']], $this->getConfig()->get('Text'))."\n";
 		}
+        $text = trim($text);
 
 		foreach($this->particles as $worldParticles){
 			foreach($worldParticles as $particle){
