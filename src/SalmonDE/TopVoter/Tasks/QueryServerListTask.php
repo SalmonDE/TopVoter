@@ -23,7 +23,7 @@ class QueryServerListTask extends AsyncTask {
 
 	public function onRun(): void{
 		$err = '';
-		$raw = Internet::getURL(str_replace(['{AMOUNT}', '{KEY}'], [$this->amount, $this->key], self::BASE_URL), 10, [], $err)->getBody();
+		$raw = Internet::getURL(str_replace(['{AMOUNT}', '{KEY}'], [$this->amount, $this->key], self::BASE_URL), 10, [], $err)?->getBody();
 
 		if($err === ''){
 			$data = \json_decode($raw, \true);
